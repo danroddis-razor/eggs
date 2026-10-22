@@ -275,3 +275,270 @@ test('axm-c182ae03 a manual duration input is constrained to a value from 0:01 t
   assert.ok(await entry.getByText('0:01').isVisible(), 'a duration of 0:01 is accepted');
   await app.screenshot('the manual duration constraint');
 });
+
+test('axm-09f68120 a person types what they are working on and starts the timer, and Admin is chosen first', async (t) => {
+  const app = await openApp(t, { path: 'time.html' });
+  await app.page.evaluate(() => localStorage.clear());
+  await app.page.reload();
+
+  await app.page.getByRole('textbox', { name: 'What are you working on?' }).nth(0).fill('Fix the login bug');
+  await app.page.getByRole('button', { name: 'Start' }).click();
+
+  const entry = app.page.getByRole('listitem').filter({ hasText: 'Fix the login bug' });
+  await entry.waitFor();
+  const projectSelect = entry.getByRole('combobox', { name: 'Project for Fix the login bug' });
+  assert.equal(await projectSelect.inputValue(), 'Admin', 'Admin is chosen first for the entry');
+  assert.ok(await entry.getByText('Fix the login bug').isVisible(), 'the entry shows the typed work');
+
+  const duration = entry.getByText(/\d+:\d{2}:\d{2}/);
+  await duration.waitFor();
+  const first = await duration.textContent();
+  await app.page.waitForFunction(
+    (initial) => {
+      const match = document.querySelector('#entry-list').textContent.match(/\d+:\d{2}:\d{2}/);
+      return match && match[0] !== initial;
+    },
+    first,
+    { timeout: 5000 },
+  );
+  const second = await duration.textContent();
+  assert.notEqual(first, second, 'the entry appears with a running timer that keeps counting');
+  await app.screenshot('a typed entry with a running timer');
+});
+
+test('axm-2e00240f a person picks a project for an entry from the short list', async (t) => {
+  const app = await openApp(t, { path: 'time.html' });
+  const startedAt = new Date().toISOString();
+  await app.page.evaluate((startedAt) => {
+    localStorage.setItem('eggs.entries', JSON.stringify([
+      { id: 'seed-one', work: 'Write the spec', project: 'Admin', startedAt, running: false, duration: 300 },
+    ]));
+  }, startedAt);
+  await app.page.reload();
+
+  const entry = app.page.getByRole('listitem').filter({ hasText: 'Write the spec' });
+  await entry.waitFor();
+  const projectSelect = entry.getByRole('combobox', { name: 'Project for Write the spec' });
+  assert.equal(await projectSelect.inputValue(), 'Admin', 'the entry exists with Admin chosen');
+
+  await projectSelect.selectOption('Client work');
+  assert.equal(await projectSelect.inputValue(), 'Client work', 'the entry shows Client work');
+  await app.screenshot('an entry with the picked project');
+});
+
+test('axm-2e2279ba a person adds an entry by hand with a duration', async (t) => {
+  const app = await openApp(t, { path: 'time.html' });
+  await app.page.evaluate(() => localStorage.clear());
+  await app.page.reload();
+
+  await app.page.getByText('No time tracked today.').waitFor();
+  await app.page.getByRole('button', { name: 'Add an entry by hand' }).click();
+  const manualWork = app.page.getByRole('textbox', { name: 'Work', exact: true });
+  await manualWork.fill('Write the spec');
+  await app.page.getByRole('textbox', { name: 'Duration' }).fill('0:05');
+  await app.page.getByRole('button', { name: 'Add' }).click();
+
+  const entry = app.page.getByRole('listitem').filter({ hasText: 'Write the spec' });
+  await entry.waitFor();
+  assert.ok(await entry.getByText('0:05').isVisible(), 'the entry appears in today\'s list with that duration');
+  await app.screenshot('a manual entry with its duration');
+});
+
+test('axm-58939af0 the core loop for one day is start, stop, correct and total', async (t) => {
+  const app = await openApp(t, {
+    path: 'time.html',
+    beforeNavigate: async (page) => {
+      await page.clock.install();
+      await page.clock.setFixedTime(new Date('2025-01-07T10:00:00.000Z'));
+      await page.addInitScript(() => localStorage.setItem('eggs.entries', '[]'));
+    },
+  });
+
+  // Start: a person types what they are working on and starts the timer.
+  await app.page.getByRole('textbox', { name: 'What are you working on?' }).nth(0).fill('Fix the login bug');
+  await app.page.getByRole('button', { name: 'Start' }).click();
+  const entry = app.page.getByRole('listitem').filter({ hasText: 'Fix the login bug' });
+  await entry.waitFor();
+  const stop = entry.getByRole('button', { name: 'Stop Fix the login bug' });
+  await stop.waitFor();
+
+  // Stop: the timer records the elapsed time and no longer runs.
+  await app.page.clock.setFixedTime(new Date('2025-01-07T10:05:30.000Z'));
+  await stop.click();
+  assert.ok(await entry.getByText('0:05').isVisible(), 'the entry shows a duration equal to the elapsed time');
+  assert.equal(await entry.getByRole('button', { name: 'Stop Fix the login bug' }).count(), 0, 'the timer no longer runs');
+
+  // Correct: a person edits the entry\'s work and duration.
+  await entry.getByRole('button', { name: 'Edit Fix the login bug' }).click();
+  const list = app.page.getByRole('list');
+  await list.getByRole('textbox', { name: 'Work' }).fill('Fix the login bug');
+  await list.getByRole('textbox', { name: 'Duration' }).fill('1:05');
+  await list.getByRole('button', { name: 'Save' }).click();
+  const edited = app.page.getByRole('listitem').filter({ hasText: 'Fix the login bug' });
+  await edited.waitFor();
+  assert.ok(await edited.getByText('1:05').isVisible(), 'the entry shows the corrected duration');
+
+  // Total: the day\'s total equals the sum of the entries\' durations.
+  await app.page.getByRole('button', { name: 'Add an entry by hand' }).click();
+  await app.page.getByRole('textbox', { name: 'Work', exact: true }).fill('Review the pull request');
+  await app.page.getByRole('textbox', { name: 'Duration' }).fill('0:05');
+  await app.page.getByRole('button', { name: 'Add' }).click();
+  const second = app.page.getByRole('listitem').filter({ hasText: 'Review the pull request' });
+  await second.waitFor();
+  const total = app.page.getByText('1:10');
+  await total.waitFor();
+  assert.ok(await total.isVisible(), 'the day\'s total equals the sum of the entries\' durations');
+  await app.screenshot('the core loop: start, stop, correct and total');
+});
+
+test('axm-6282004a when today has no entries the list says No time tracked today and the total reads 0:00', async (t) => {
+  const app = await openApp(t, { path: 'time.html' });
+  await app.page.evaluate(() => localStorage.clear());
+  await app.page.reload();
+
+  const empty = app.page.getByText('No time tracked today.');
+  await empty.waitFor();
+  assert.ok(await empty.isVisible(), 'the list says No time tracked today.');
+  const total = app.page.getByText('0:00');
+  await total.waitFor();
+  assert.ok(await total.isVisible(), 'the total reads 0:00');
+  await app.screenshot('the empty state');
+});
+
+test('axm-a92981e1 when today\'s list is empty a person adds an entry by hand with a duration', async (t) => {
+  const app = await openApp(t, { path: 'time.html' });
+  await app.page.evaluate(() => localStorage.clear());
+  await app.page.reload();
+
+  await app.page.getByText('No time tracked today.').waitFor();
+  await app.page.getByRole('button', { name: 'Add an entry by hand' }).click();
+  const manualWork = app.page.getByRole('textbox', { name: 'Work', exact: true });
+  await manualWork.fill('Write the spec');
+  await app.page.getByRole('textbox', { name: 'Duration' }).fill('0:05');
+  await app.page.getByRole('button', { name: 'Add' }).click();
+
+  const entry = app.page.getByRole('listitem').filter({ hasText: 'Write the spec' });
+  await entry.waitFor();
+  assert.ok(await entry.getByText('0:05').isVisible(), 'the entry appears in today\'s list with that duration');
+  await app.screenshot('a manual entry added to an empty day');
+});
+
+test('axm-b3fc2ebf when two entries exist for today the page loads with each entry and the day\'s total', async (t) => {
+  const app = await openApp(t, { path: 'time.html' });
+  const startedAt = new Date().toISOString();
+  await app.page.evaluate((startedAt) => {
+    localStorage.setItem('eggs.entries', JSON.stringify([
+      { id: 'seed-one', work: 'Write the spec', project: 'Admin', startedAt, running: false, duration: 300 },
+      { id: 'seed-two', work: 'Review the pull request', project: 'Client work', startedAt, running: false, duration: 600 },
+    ]));
+  }, startedAt);
+  await app.page.reload();
+
+  const list = app.page.getByRole('list');
+  await list.waitFor();
+  const items = app.page.getByRole('listitem');
+  assert.equal(await items.count(), 2, 'the list shows both of today\'s entries');
+
+  const first = app.page.getByRole('listitem').filter({ hasText: 'Write the spec' });
+  assert.ok(await first.getByText('0:05').isVisible(), 'the first entry shows its duration 0:05');
+  const second = app.page.getByRole('listitem').filter({ hasText: 'Review the pull request' });
+  assert.ok(await second.getByText('0:10').isVisible(), 'the second entry shows its duration 0:10');
+
+  const total = app.page.getByText('0:15');
+  await total.waitFor();
+  assert.ok(await total.isVisible(), 'the day\'s total equals the sum of the entries\' durations');
+  await app.screenshot('two entries and the day total after a reload');
+});
+
+test('axm-db4b1374 the page produces the entry list, the day\'s total, a running timer, an undo offer and an error message', async (t) => {
+  const app = await openApp(t, { path: 'time.html' });
+  await app.page.evaluate(() => localStorage.clear());
+  await app.page.reload();
+
+  // A running timer display and the day's total.
+  await app.page.getByRole('textbox', { name: 'What are you working on?' }).nth(0).fill('Fix the login bug');
+  await app.page.getByRole('button', { name: 'Start' }).click();
+  const entry = app.page.getByRole('listitem').filter({ hasText: 'Fix the login bug' });
+  await entry.waitFor();
+  const running = entry.getByText(/\d+:\d{2}:\d{2}/);
+  await running.waitFor();
+  assert.ok(await running.isVisible(), 'the page shows a running timer display');
+  const total = app.page.getByText('Total');
+  await total.waitFor();
+  assert.ok(await total.isVisible(), 'the page shows the day\'s total');
+
+  // An undo offer after a delete.
+  await entry.getByRole('button', { name: 'Delete Fix the login bug' }).click();
+  const undo = app.page.getByRole('button', { name: 'Undo' });
+  await undo.waitFor();
+  assert.ok(await undo.isVisible(), 'an undo offer appears after a delete');
+
+  // An error message when an action fails.
+  await app.page.getByRole('button', { name: 'Add an entry by hand' }).click();
+  await app.page.getByRole('textbox', { name: 'Work', exact: true }).fill('Write the spec');
+  await app.page.getByRole('textbox', { name: 'Duration' }).fill('0:00');
+  await app.page.getByRole('button', { name: 'Add' }).click();
+  const error = app.page.getByText('Duration must be between 0:01 and 24:00.');
+  await error.waitFor();
+  assert.ok(await error.isVisible(), 'an error message appears when an action fails');
+  await app.screenshot('the page\'s outputs: list, total, running timer, undo and error');
+});
+
+test('axm-f1ab2613 the page accepts the work typed, a project, start, stop, edit, delete, a manual duration and an undo choice', async (t) => {
+  const app = await openApp(t, {
+    path: 'time.html',
+    beforeNavigate: async (page) => {
+      await page.clock.install();
+      await page.clock.setFixedTime(new Date('2025-01-07T10:00:00.000Z'));
+      await page.addInitScript(() => localStorage.setItem('eggs.entries', '[]'));
+    },
+  });
+
+  // The work the person types, a project chosen from the short list, and start.
+  const work = app.page.getByRole('textbox', { name: 'What are you working on?' }).nth(0);
+  await work.fill('Fix the login bug');
+  const project = app.page.getByRole('combobox', { name: 'Project' });
+  const options = await project.locator('option').allTextContents();
+  assert.deepEqual(options, ['Admin', 'Client work', 'Internal'], 'the short list offers Admin, Client work and Internal');
+  await project.selectOption('Client work');
+  await app.page.getByRole('button', { name: 'Start' }).click();
+  const entry = app.page.getByRole('listitem').filter({ hasText: 'Fix the login bug' });
+  await entry.waitFor();
+  assert.equal(await entry.getByRole('combobox', { name: 'Project for Fix the login bug' }).inputValue(), 'Client work', 'the entry carries the chosen project');
+
+  // Stop.
+  const stop = entry.getByRole('button', { name: 'Stop Fix the login bug' });
+  await stop.waitFor();
+  await app.page.clock.setFixedTime(new Date('2025-01-07T10:05:00.000Z'));
+  await stop.click();
+  assert.ok(await entry.getByText('0:05').isVisible(), 'the stop action records the elapsed time');
+
+  // Edit.
+  await entry.getByRole('button', { name: 'Edit Fix the login bug' }).click();
+  const list = app.page.getByRole('list');
+  await list.getByRole('textbox', { name: 'Duration' }).fill('1:05');
+  await list.getByRole('button', { name: 'Save' }).click();
+  const edited = app.page.getByRole('listitem').filter({ hasText: 'Fix the login bug' });
+  await edited.waitFor();
+  assert.ok(await edited.getByText('1:05').isVisible(), 'the edit action changes the entry\'s duration');
+
+  // A manual duration from 0:01 to 24:00.
+  await app.page.getByRole('button', { name: 'Add an entry by hand' }).click();
+  await app.page.getByRole('textbox', { name: 'Work', exact: true }).fill('Review the pull request');
+  await app.page.getByRole('textbox', { name: 'Duration' }).fill('0:01');
+  await app.page.getByRole('button', { name: 'Add' }).click();
+  const manual = app.page.getByRole('listitem').filter({ hasText: 'Review the pull request' });
+  await manual.waitFor();
+  assert.ok(await manual.getByText('0:01').isVisible(), 'a manual duration of 0:01 is accepted');
+
+  // Delete and an undo choice.
+  await manual.getByRole('button', { name: 'Delete Review the pull request' }).click();
+  assert.equal(await app.page.getByRole('listitem').filter({ hasText: 'Review the pull request' }).count(), 0, 'the delete action removes the entry');
+  const undo = app.page.getByRole('button', { name: 'Undo' });
+  await undo.waitFor();
+  await undo.click();
+  const restored = app.page.getByRole('listitem').filter({ hasText: 'Review the pull request' });
+  await restored.waitFor();
+  assert.ok(await restored.getByText('0:01').isVisible(), 'the undo choice brings the entry back');
+  await app.screenshot('the page\'s inputs: work, project, start, stop, edit, delete, duration and undo');
+});
