@@ -52,6 +52,19 @@ const css = stylesheet(page);
 // The egg emoji, selected by what it is on screen.
 const EGG = '\u{1F95A}';
 
+test('axm-24fb2c31 the egg page shows the egg emoji with the word Eggs below it', () => {
+  // The page's public contract, as a visitor sees it: the egg emoji appears,
+  // and the word 'Eggs' appears below it — after it in reading order.
+  const eggIndex = text.indexOf(EGG);
+  const eggsIndex = text.indexOf('Eggs');
+  assert.ok(eggIndex !== -1, 'the egg emoji must appear in the visible output');
+  assert.ok(eggsIndex !== -1, "the word 'Eggs' must appear in the visible output");
+  assert.ok(
+    eggsIndex > eggIndex,
+    "the word 'Eggs' must appear below (after) the egg emoji in reading order"
+  );
+});
+
 test('axm-0afdddde elements are selected by visible output, not internal classes or ids', () => {
   // The page's visible output must carry the egg emoji and the word 'Eggs',
   // and both must be locatable by their visible text alone — the way a
