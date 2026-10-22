@@ -1,0 +1,47 @@
+{
+  "schema": "axiom.precursor.attempt-causation-delta",
+  "schemaVersion": 1,
+  "targetRevision": "4bc20955bce1036352b1b4b73b95307a702abfe8",
+  "changes": [
+    {
+      "path": "src/EggPage/Controllers/HomeController.cs",
+      "disposition": 0,
+      "requirementIdentity": "82d42af2-27df-2133-6207-f7dfdfba0da8"
+    },
+    {
+      "path": "src/EggPage/EggPage.csproj",
+      "disposition": 0,
+      "requirementIdentity": "82d42af2-27df-2133-6207-f7dfdfba0da8"
+    },
+    {
+      "path": "src/EggPage/Program.cs",
+      "disposition": 0,
+      "requirementIdentity": "82d42af2-27df-2133-6207-f7dfdfba0da8"
+    },
+    {
+      "path": "src/EggPage/Views/Home/Index.cshtml",
+      "disposition": 0,
+      "requirementIdentity": "0426c0f9-d3f8-a500-5902-c0eab74ac52e"
+    },
+    {
+      "path": "src/EggPage/Views/Shared/_Layout.cshtml",
+      "disposition": 0,
+      "requirementIdentity": "82d42af2-27df-2133-6207-f7dfdfba0da8"
+    },
+    {
+      "path": "src/EggPage/wwwroot/css/site.css",
+      "disposition": 0,
+      "requirementIdentity": "82d42af2-27df-2133-6207-f7dfdfba0da8"
+    },
+    {
+      "path": "tests/EggPage.Tests/EggPage.Tests.csproj",
+      "disposition": 0,
+      "requirementIdentity": "82d42af2-27df-2133-6207-f7dfdfba0da8"
+    },
+    {
+      "path": "tests/EggPage.Tests/EggPageTests.cs",
+      "disposition": 0,
+      "requirementIdentity": "0426c0f9-d3f8-a500-5902-c0eab74ac52e"
+    }
+  ]
+}
