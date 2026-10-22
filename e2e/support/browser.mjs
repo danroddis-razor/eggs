@@ -42,7 +42,7 @@ function playwright() {
 
 const shots = fileURLToPath(new URL('../../reports/screenshots/', import.meta.url));
 
-export async function openApp(t, { path = '', viewport = { width: 1280, height: 800 } } = {}) {
+export async function openApp(t, { path = '', viewport = { width: 1280, height: 800 }, beforeNavigate } = {}) {
   // Cleanup is registered before anything can fail: a server left open keeps the test process alive.
   const { server, url } = await serve();
   let browser = null;
@@ -56,6 +56,7 @@ export async function openApp(t, { path = '', viewport = { width: 1280, height: 
   const page = await context.newPage();
   const errors = [];
   page.on('pageerror', (error) => errors.push(error.message));
+  if (beforeNavigate) await beforeNavigate(page);
   await page.goto(new URL(path, url).href);
 
   const slug = (name) => name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
