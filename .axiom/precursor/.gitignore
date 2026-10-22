@@ -1,0 +1,12 @@
+/work/*
+!/work/compilation/
+/work/compilation/lease.json
+/work/compilation/candidate.previous*
+!/work/relationship-discovery/
+/work/relationship-discovery/*
+!/work/relationship-discovery/compilation/
+/work/**/*.tmp
+/work/**/*.staging
+/.locks/
+/flow/gate-home/
+/flow/artifacts/
