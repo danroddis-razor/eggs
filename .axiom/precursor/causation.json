@@ -3,6 +3,15 @@
   "schemaVersion": 1,
   "entries": [
     {
+      "requirementIdentity": "018f4215-35fc-42a5-5989-4bb145d6d9f8",
+      "paths": [
+        {
+          "path": "e2e/time.e2e.mjs",
+          "targetRevision": "eac8c06fd176b7b54d4bf6051a3f8b93b6a325d6"
+        }
+      ]
+    },
+    {
       "requirementIdentity": "064fda01-6321-8746-02d1-0d08a773fbbc",
       "paths": [
         {
@@ -131,6 +140,15 @@
         {
           "path": "styles.css",
           "targetRevision": "9cbe8d563eb38d0bd9aa63038adf99cf5fc1bbbe"
+        }
+      ]
+    },
+    {
+      "requirementIdentity": "752b8208-d15d-5792-028e-70d4f0cdfdc8",
+      "paths": [
+        {
+          "path": "e2e/persist.e2e.mjs",
+          "targetRevision": "eac8c06fd176b7b54d4bf6051a3f8b93b6a325d6"
         }
       ]
     },
