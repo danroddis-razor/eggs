@@ -13,11 +13,18 @@
 // openApp closes the browser and the server when the test ends. Screenshots land in
 // reports/screenshots, which the end-to-end gate declares as its artifacts.
 import { createRequire } from 'node:module';
+import { existsSync } from 'node:fs';
 import { mkdir } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { serve } from './serve.mjs';
 
 const require = createRequire(import.meta.url);
+
+// The worker image keeps its browsers in /opt/playwright. A gate runs with almost no environment,
+// so PLAYWRIGHT_BROWSERS_PATH may not reach it; point Playwright there when it is unset.
+if (process.env.PLAYWRIGHT_BROWSERS_PATH === undefined && existsSync('/opt/playwright')) {
+  process.env.PLAYWRIGHT_BROWSERS_PATH = '/opt/playwright';
+}
 
 // Playwright is not a dependency of this repository: the worker image carries it globally, and a
 // person running locally points EGGS_PLAYWRIGHT at an installed copy.
@@ -36,16 +43,19 @@ function playwright() {
 const shots = fileURLToPath(new URL('../../reports/screenshots/', import.meta.url));
 
 export async function openApp(t, { path = '', viewport = { width: 1280, height: 800 } } = {}) {
+  // Cleanup is registered before anything can fail: a server left open keeps the test process alive.
   const { server, url } = await serve();
-  const browser = await playwright().chromium.launch();
+  let browser = null;
+  t.after(async () => {
+    await browser?.close();
+    server.closeAllConnections();
+    server.close();
+  });
+  browser = await playwright().chromium.launch({ timeout: 30_000 });
   const context = await browser.newContext({ viewport });
   const page = await context.newPage();
   const errors = [];
   page.on('pageerror', (error) => errors.push(error.message));
-  t.after(async () => {
-    await browser.close();
-    server.close();
-  });
   await page.goto(new URL(path, url).href);
 
   const slug = (name) => name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
