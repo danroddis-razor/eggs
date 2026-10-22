@@ -12,6 +12,15 @@
       ]
     },
     {
+      "requirementIdentity": "24fb2c31-f5a4-758d-63c8-9f6415a95763",
+      "paths": [
+        {
+          "path": "tests/egg-page.test.mjs",
+          "targetRevision": "916f3be06c717b5ba88a92440885f6572ab901d6"
+        }
+      ]
+    },
+    {
       "requirementIdentity": "e060e9f6-7d20-fb52-4991-af039c8eb420",
       "paths": [
         {
