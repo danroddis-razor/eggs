@@ -45,6 +45,15 @@
       ]
     },
     {
+      "requirementIdentity": "2d2baaae-0eb8-c989-cd01-1b2e3f757925",
+      "paths": [
+        {
+          "path": "e2e/egg.e2e.mjs",
+          "targetRevision": "0116639427b71b1bef1e0ffe3e5f596b9a03a61f"
+        }
+      ]
+    },
+    {
       "requirementIdentity": "4681e632-3ece-ead2-f3a6-69cfcb3b5848",
       "paths": [
         {
@@ -67,6 +76,27 @@
         {
           "path": "src/time.mjs",
           "targetRevision": "a4f5734eac0207c9909c5001e9a5eac2815dde49"
+        }
+      ]
+    },
+    {
+      "requirementIdentity": "496ce038-8b9b-3fa7-8c85-597ae8a1b90a",
+      "paths": [
+        {
+          "path": "src/clients.mjs",
+          "targetRevision": "0116639427b71b1bef1e0ffe3e5f596b9a03a61f"
+        },
+        {
+          "path": "src/projects.mjs",
+          "targetRevision": "0116639427b71b1bef1e0ffe3e5f596b9a03a61f"
+        },
+        {
+          "path": "src/store.mjs",
+          "targetRevision": "0116639427b71b1bef1e0ffe3e5f596b9a03a61f"
+        },
+        {
+          "path": "tests/projects.test.mjs",
+          "targetRevision": "0116639427b71b1bef1e0ffe3e5f596b9a03a61f"
         }
       ]
     },
