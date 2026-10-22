@@ -1,0 +1,24 @@
+{
+  "schema": "axiom.precursor.requirement-causation",
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "requirementIdentity": "0afdddde-d949-507c-7a33-aaec6c59d45c",
+      "paths": [
+        {
+          "path": "tests/egg-page.test.mjs",
+          "targetRevision": "4c17853c97e91cce26df2b720e2cddb5fef45e11"
+        }
+      ]
+    },
+    {
+      "requirementIdentity": "e060e9f6-7d20-fb52-4991-af039c8eb420",
+      "paths": [
+        {
+          "path": "index.html",
+          "targetRevision": "4c17853c97e91cce26df2b720e2cddb5fef45e11"
+        }
+      ]
+    }
+  ]
+}
