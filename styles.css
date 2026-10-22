@@ -1,0 +1,247 @@
+:root {
+  --bg: #fbf8f3;
+  --surface: #ffffff;
+  --text: #2b2620;
+  --muted: #6f675c;
+  --accent: #e0a526;
+  --line: #e7e0d5;
+  --space: 8px;
+  --radius: 10px;
+  --font: system-ui, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1d1b18;
+    --surface: #28251f;
+    --text: #f2ede4;
+    --muted: #b5ac9e;
+    --accent: #f0b93a;
+    --line: #3a352d;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+}
+
+.egg-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space);
+}
+
+.egg-emoji {
+  font-size: 96px;
+  line-height: 1;
+}
+
+.egg-word {
+  margin: 0;
+  font-family: var(--font);
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* The time page keeps the egg header at the top and fills the rest with the day's work. */
+body.time-page {
+  justify-content: flex-start;
+  padding: calc(var(--space) * 4) calc(var(--space) * 2);
+}
+
+body.time-page main {
+  width: 100%;
+  max-width: 640px;
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--space) * 3);
+}
+
+.new-entry {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: calc(var(--space) * 2);
+}
+
+.new-entry label {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.new-entry input,
+.new-entry select {
+  font: inherit;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: var(--space);
+}
+
+.new-entry button {
+  font: inherit;
+  font-weight: 600;
+  color: #fff;
+  background: var(--accent);
+  border: none;
+  border-radius: var(--radius);
+  padding: var(--space);
+  cursor: pointer;
+}
+
+.entry-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space);
+}
+
+.entry-list .empty {
+  color: var(--muted);
+}
+
+.entry {
+  display: flex;
+  align-items: baseline;
+  gap: calc(var(--space) * 2);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: var(--space) calc(var(--space) * 2);
+}
+
+.entry .entry-work {
+  flex: 1;
+}
+
+.entry .entry-duration {
+  font-variant-numeric: tabular-nums;
+}
+
+.entry .entry-project {
+  font: inherit;
+  color: var(--muted);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: calc(var(--space) / 2) var(--space);
+}
+
+.entry .entry-stop {
+  font: inherit;
+  font-weight: 600;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: calc(var(--space) / 2) var(--space);
+  cursor: pointer;
+}
+
+.entry .entry-edit,
+.entry .entry-delete {
+  font: inherit;
+  font-weight: 600;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: calc(var(--space) / 2) var(--space);
+  cursor: pointer;
+}
+
+.entry-edit-form {
+  display: flex;
+  align-items: center;
+  gap: var(--space);
+  flex: 1;
+}
+
+.entry-edit-form label {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--space) / 2);
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.entry-edit-form input {
+  font: inherit;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: calc(var(--space) / 2) var(--space);
+}
+
+.entry-edit-form input[name='work'] {
+  flex: 1;
+}
+
+.entry-edit-form button {
+  font: inherit;
+  font-weight: 600;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: calc(var(--space) / 2) var(--space);
+  cursor: pointer;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: var(--space);
+  margin: 0;
+  min-height: 1em;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.status .undo {
+  font: inherit;
+  font-weight: 600;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: calc(var(--space) / 2) var(--space);
+  cursor: pointer;
+}
+
+.error {
+  margin: 0;
+  min-height: 1em;
+  font-size: 14px;
+  color: #b3261e;
+}
+
+.day-total {
+  margin: 0;
+  font-weight: 600;
+}
+
+.day-total #day-total {
+  font-variant-numeric: tabular-nums;
+}

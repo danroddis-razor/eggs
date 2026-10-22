@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Eggs — Time</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="time-page">
+  <header class="egg-header">
+    <span class="egg-emoji" aria-hidden="true">🥚</span>
+    <h1 class="egg-word">Eggs</h1>
+  </header>
+  <main>
+    <form class="new-entry" id="new-entry">
+      <label for="work">What are you working on?</label>
+      <input type="text" id="work" name="work" autocomplete="off">
+      <label for="project">Project</label>
+      <select id="project" name="project"></select>
+      <button type="button" id="start">Start</button>
+    </form>
+    <button type="button" id="open-manual" class="open-manual">Add an entry by hand</button>
+    <form class="new-entry" id="manual-entry" hidden>
+      <label for="manual-work">Work</label>
+      <input type="text" id="manual-work" name="manual-work" autocomplete="off">
+      <label for="manual-duration">Duration</label>
+      <input type="text" id="manual-duration" name="manual-duration" autocomplete="off" pattern="(0:[0-5][1-9]|([1-9]|1[0-9]|2[0-3]):[0-5][0-9]|24:00)" placeholder="0:00">
+      <button type="button" id="add">Add</button>
+    </form>
+    <p class="error" id="error" role="alert"></p>
+    <ul id="entry-list" class="entry-list"></ul>
+    <p class="day-total">Total <span id="day-total">0:00</span></p>
+    <p class="status" id="status" role="status" aria-live="polite"></p>
+  </main>
+  <script type="module" src="src/time.mjs"></script>
+</body>
+</html>
