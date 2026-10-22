@@ -1,0 +1,1 @@
+{"previousRecordRevision":"sha256:c1e800ca4638ff53f1747fac56e2ecc45afa3e4c5f3a6f99291c930ade254de1","recordRevision":"sha256:2a48169fb94ffade696c468612698b72d36f04aec869a1c5cb7ce60903f8ee5f","schema":"axiom.precursor.phase-delivery-journal-entry","schemaVersion":2,"sequence":5,"stopped":{"obligations":[],"phaseId":"suite-verification","stopReason":"obligations_outstanding"}}

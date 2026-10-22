@@ -1,0 +1,12 @@
+{
+  "schema": "axiom.precursor.attempt-causation-delta",
+  "schemaVersion": 1,
+  "targetRevision": "88b6a73c2b65cc355b663ab2940b1ca37fa018a1",
+  "changes": [
+    {
+      "path": "tests/EggPage.E2E/EggPageEndToEndTests.cs",
+      "disposition": 0,
+      "requirementIdentity": "361279f3-b989-f860-1b47-9ed806449488"
+    }
+  ]
+}
