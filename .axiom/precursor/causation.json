@@ -1,0 +1,177 @@
+{
+  "schema": "axiom.precursor.requirement-causation",
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "requirementIdentity": "064fda01-6321-8746-02d1-0d08a773fbbc",
+      "paths": [
+        {
+          "path": "styles.css",
+          "targetRevision": "789f2d834ab7915e793b2588e929dcce0da0ec15"
+        }
+      ]
+    },
+    {
+      "requirementIdentity": "10d3c252-495c-8ab8-40ae-c3d2e6c06511",
+      "paths": [
+        {
+          "path": "e2e/probe.e2e.mjs",
+          "targetRevision": "789f2d834ab7915e793b2588e929dcce0da0ec15"
+        },
+        {
+          "path": "e2e/time.e2e.mjs",
+          "targetRevision": "789f2d834ab7915e793b2588e929dcce0da0ec15"
+        },
+        {
+          "path": "src/entries.mjs",
+          "targetRevision": "789f2d834ab7915e793b2588e929dcce0da0ec15"
+        },
+        {
+          "path": "src/projects.mjs",
+          "targetRevision": "789f2d834ab7915e793b2588e929dcce0da0ec15"
+        },
+        {
+          "path": "src/store.mjs",
+          "targetRevision": "789f2d834ab7915e793b2588e929dcce0da0ec15"
+        },
+        {
+          "path": "src/time.mjs",
+          "targetRevision": "789f2d834ab7915e793b2588e929dcce0da0ec15"
+        },
+        {
+          "path": "time.html",
+          "targetRevision": "789f2d834ab7915e793b2588e929dcce0da0ec15"
+        }
+      ]
+    },
+    {
+      "requirementIdentity": "4681e632-3ece-ead2-f3a6-69cfcb3b5848",
+      "paths": [
+        {
+          "path": "src/time.mjs",
+          "targetRevision": "48101c345fdac1e9b3ef2ca878a6f8c255ba2d99"
+        },
+        {
+          "path": "styles.css",
+          "targetRevision": "48101c345fdac1e9b3ef2ca878a6f8c255ba2d99"
+        },
+        {
+          "path": "time.html",
+          "targetRevision": "48101c345fdac1e9b3ef2ca878a6f8c255ba2d99"
+        }
+      ]
+    },
+    {
+      "requirementIdentity": "46838f30-1c42-8990-3377-df516d8b3cf0",
+      "paths": [
+        {
+          "path": "src/time.mjs",
+          "targetRevision": "a4f5734eac0207c9909c5001e9a5eac2815dde49"
+        }
+      ]
+    },
+    {
+      "requirementIdentity": "59d65845-34e6-f07c-5648-cdbd62415135",
+      "paths": [
+        {
+          "path": "e2e/support/browser.mjs",
+          "targetRevision": "9cbe8d563eb38d0bd9aa63038adf99cf5fc1bbbe"
+        },
+        {
+          "path": "e2e/time.e2e.mjs",
+          "targetRevision": "9cbe8d563eb38d0bd9aa63038adf99cf5fc1bbbe"
+        },
+        {
+          "path": "src/entries.mjs",
+          "targetRevision": "9cbe8d563eb38d0bd9aa63038adf99cf5fc1bbbe"
+        },
+        {
+          "path": "src/time.mjs",
+          "targetRevision": "9cbe8d563eb38d0bd9aa63038adf99cf5fc1bbbe"
+        }
+      ]
+    },
+    {
+      "requirementIdentity": "6cfbe257-b3d5-c2b3-c5d3-b8946171c98c",
+      "paths": [
+        {
+          "path": "src/projects.mjs",
+          "targetRevision": "9cbe8d563eb38d0bd9aa63038adf99cf5fc1bbbe"
+        },
+        {
+          "path": "styles.css",
+          "targetRevision": "9cbe8d563eb38d0bd9aa63038adf99cf5fc1bbbe"
+        }
+      ]
+    },
+    {
+      "requirementIdentity": "a6d8cd59-451b-01b7-3116-8b12a057ae0b",
+      "paths": [
+        {
+          "path": "e2e/persist.e2e.mjs",
+          "targetRevision": "a4f5734eac0207c9909c5001e9a5eac2815dde49"
+        }
+      ]
+    },
+    {
+      "requirementIdentity": "b30e430d-880c-ab7a-0a3a-bf2929413654",
+      "paths": [
+        {
+          "path": "e2e/egg.e2e.mjs",
+          "targetRevision": "15aa2e988a69452aa2a1dd8177e50c2b087c0614"
+        },
+        {
+          "path": "index.html",
+          "targetRevision": "15aa2e988a69452aa2a1dd8177e50c2b087c0614"
+        },
+        {
+          "path": "src/app.mjs",
+          "targetRevision": "15aa2e988a69452aa2a1dd8177e50c2b087c0614"
+        },
+        {
+          "path": "styles.css",
+          "targetRevision": "15aa2e988a69452aa2a1dd8177e50c2b087c0614"
+        }
+      ]
+    },
+    {
+      "requirementIdentity": "c182ae03-b4f7-4674-3c55-d145b578c79c",
+      "paths": [
+        {
+          "path": "tests/entries.test.mjs",
+          "targetRevision": "9cbe8d563eb38d0bd9aa63038adf99cf5fc1bbbe"
+        },
+        {
+          "path": "time.html",
+          "targetRevision": "9cbe8d563eb38d0bd9aa63038adf99cf5fc1bbbe"
+        }
+      ]
+    },
+    {
+      "requirementIdentity": "ce528f45-9984-fcc9-d5d0-18f8ca7ea09a",
+      "paths": [
+        {
+          "path": "e2e/time.e2e.mjs",
+          "targetRevision": "48101c345fdac1e9b3ef2ca878a6f8c255ba2d99"
+        },
+        {
+          "path": "src/entries.mjs",
+          "targetRevision": "48101c345fdac1e9b3ef2ca878a6f8c255ba2d99"
+        },
+        {
+          "path": "tests/entries.test.mjs",
+          "targetRevision": "48101c345fdac1e9b3ef2ca878a6f8c255ba2d99"
+        }
+      ]
+    },
+    {
+      "requirementIdentity": "ebaa74a8-7fb5-5ee5-ebb6-6f59f751217a",
+      "paths": [
+        {
+          "path": "time.html",
+          "targetRevision": "a4f5734eac0207c9909c5001e9a5eac2815dde49"
+        }
+      ]
+    }
+  ]
+}
