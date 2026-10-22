@@ -13,6 +13,7 @@ The page lets a visitor see an egg emoji centered on the screen. The word 'Eggs'
 # In scope — acceptance criteria
 - **AC1 —** One egg emoji appears centered on the page. _(Scenario: "Centered egg emoji")_
 - **AC2 —** The word 'Eggs' appears below the emoji in sans-serif text. _(Scenario: "Eggs text below emoji")_
+- **AC3 —** Today's date appears below the word 'Eggs'. _(Scenario: "Today's date shown")_
 
 # Out of scope
 Nothing waits yet.
@@ -33,4 +34,11 @@ Scenario: Eggs text below emoji
 Given the egg page loads
 When no further action is taken
 Then the word 'Eggs' appears below the emoji in sans-serif text
+```
+
+```gherkin
+Scenario: Today's date shown
+Given the egg page loads
+When no further action is taken
+Then today's date appears below the word 'Eggs'
 ```
