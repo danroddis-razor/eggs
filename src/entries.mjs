@@ -49,3 +49,27 @@ export function formatElapsed(totalSeconds) {
   const s = seconds % 60;
   return `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
 }
+
+// A manual duration is a value from 0:01 to 24:00, in whole seconds.
+export const MIN_DURATION = 60;
+export const MAX_DURATION = 86400;
+
+// Parse a typed duration, h:mm, into whole seconds. null when it is not a duration
+// or falls outside 0:01 to 24:00.
+export function parseDuration(value) {
+  const match = /^(\d+):(\d{2})$/.exec(String(value ?? '').trim());
+  if (!match) return null;
+  const seconds = Number(match[1]) * 3600 + Number(match[2]) * 60;
+  if (seconds < MIN_DURATION || seconds > MAX_DURATION) return null;
+  return seconds;
+}
+
+// Keep a duration inside 0:01 to 24:00.
+export function clampDuration(seconds) {
+  return Math.min(MAX_DURATION, Math.max(MIN_DURATION, Math.floor(seconds)));
+}
+
+// Stopping a running timer records the elapsed time between starting and stopping.
+export function stopEntry(entry, now = new Date()) {
+  return { ...entry, running: false, duration: entryDuration(entry, now) };
+}

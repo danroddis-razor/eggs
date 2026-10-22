@@ -39,12 +39,13 @@ test('axm-10d3c252 a person types what they are working on and starts the timer,
   await app.page.evaluate(() => localStorage.clear());
   await app.page.reload();
 
-  await app.page.getByRole('textbox').fill('Fix the login bug');
+  await app.page.getByRole('textbox', { name: 'What are you working on?' }).nth(0).fill('Fix the login bug');
   await app.page.getByRole('button', { name: 'Start' }).click();
 
   const entry = app.page.getByRole('listitem').filter({ hasText: 'Fix the login bug' });
   await entry.waitFor();
-  assert.ok(await entry.getByText('Admin').isVisible(), 'Admin is chosen first for the entry');
+  const projectSelect = entry.getByRole('combobox', { name: 'Project for Fix the login bug' });
+  assert.equal(await projectSelect.inputValue(), 'Admin', 'Admin is chosen first for the entry');
   assert.ok(await entry.getByText('Fix the login bug').isVisible(), 'the entry shows the typed work');
 
   const duration = entry.getByText(/\d+:\d{2}:\d{2}/);
@@ -93,4 +94,109 @@ test('axm-c94eff98 when today has no entries the list says No time tracked today
   await total.waitFor();
   assert.ok(await total.isVisible(), 'the total reads 0:00');
   await app.screenshot('the empty state');
+});
+
+test('axm-59d65845 stopping a running timer records the elapsed time and the timer no longer runs', async (t) => {
+  const app = await openApp(t, {
+    path: 'time.html',
+    beforeNavigate: async (page) => {
+      await page.clock.install();
+      await page.clock.setFixedTime(new Date('2025-01-07T10:00:00.000Z'));
+      await page.addInitScript(() => localStorage.setItem('eggs.entries', '[]'));
+    },
+  });
+
+  await app.page.getByRole('textbox', { name: 'What are you working on?' }).nth(0).fill('Fix the login bug');
+  await app.page.getByRole('button', { name: 'Start' }).click();
+
+  const entry = app.page.getByRole('listitem').filter({ hasText: 'Fix the login bug' });
+  await entry.waitFor();
+  const stop = entry.getByRole('button', { name: 'Stop Fix the login bug' });
+  await stop.waitFor();
+
+  // Advance the clock 5 minutes 30 seconds past the start, then stop the timer.
+  await app.page.clock.setFixedTime(new Date('2025-01-07T10:05:30.000Z'));
+  await stop.click();
+  const duration = entry.getByText('0:05');
+  await duration.waitFor();
+  assert.ok(await duration.isVisible(), 'the entry shows a duration equal to the elapsed time between starting and stopping');
+  assert.equal(await entry.getByRole('button', { name: 'Stop Fix the login bug' }).count(), 0, 'the timer no longer runs');
+  await app.screenshot('a stopped timer with its duration');
+});
+
+test('axm-6cfbe257 a person picks a project for an entry from the short list', async (t) => {
+  const app = await openApp(t, { path: 'time.html' });
+  const startedAt = new Date().toISOString();
+  await app.page.evaluate((startedAt) => {
+    localStorage.setItem('eggs.entries', JSON.stringify([
+      { id: 'seed-one', work: 'Write the spec', project: 'Admin', startedAt, running: false, duration: 300 },
+    ]));
+  }, startedAt);
+  await app.page.reload();
+
+  const entry = app.page.getByRole('listitem').filter({ hasText: 'Write the spec' });
+  await entry.waitFor();
+  const projectSelect = entry.getByRole('combobox', { name: 'Project for Write the spec' });
+  assert.equal(await projectSelect.inputValue(), 'Admin', 'the entry exists with Admin chosen');
+
+  await projectSelect.selectOption('Client work');
+  assert.equal(await projectSelect.inputValue(), 'Client work', 'the entry shows Client work');
+  await app.screenshot('an entry with the picked project');
+});
+
+test('axm-92abe8f3 a person adds an entry by hand with a duration', async (t) => {
+  const app = await openApp(t, { path: 'time.html' });
+  await app.page.evaluate(() => localStorage.clear());
+  await app.page.reload();
+
+  await app.page.getByText('No time tracked today.').waitFor();
+  await app.page.getByRole('button', { name: 'Add an entry by hand' }).click();
+  const manualWork = app.page.getByRole('textbox', { name: 'Work', exact: true });
+  await manualWork.fill('Write the spec');
+  await app.page.getByRole('textbox', { name: 'Duration' }).fill('0:05');
+  await app.page.getByRole('button', { name: 'Add' }).click();
+
+  const entry = app.page.getByRole('listitem').filter({ hasText: 'Write the spec' });
+  await entry.waitFor();
+  assert.ok(await entry.getByText('0:05').isVisible(), 'the entry appears in today\'s list with that duration');
+  await app.screenshot('a manual entry with its duration');
+});
+
+test('axm-c182ae03 a manual duration input is constrained to a value from 0:01 to 24:00', async (t) => {
+  const app = await openApp(t, { path: 'time.html' });
+  await app.page.evaluate(() => localStorage.clear());
+  await app.page.reload();
+
+  const duration = app.page.getByRole('textbox', { name: 'Duration' });
+  await duration.waitFor();
+  const pattern = await duration.getAttribute('pattern');
+  assert.ok(pattern, 'the duration input carries a pattern');
+  assert.ok(new RegExp(`^${pattern}$`).test('0:01'), 'the pattern admits 0:01');
+  assert.ok(new RegExp(`^${pattern}$`).test('24:00'), 'the pattern admits 24:00');
+  assert.ok(!new RegExp(`^${pattern}$`).test('0:00'), 'the pattern rejects 0:00');
+  assert.ok(!new RegExp(`^${pattern}$`).test('24:01'), 'the pattern rejects 24:01');
+
+  await app.page.getByRole('button', { name: 'Add an entry by hand' }).click();
+  const work = app.page.getByRole('textbox', { name: 'Work', exact: true });
+  const add = app.page.getByRole('button', { name: 'Add' });
+  const error = app.page.getByText('Duration must be between 0:01 and 24:00.');
+
+  await work.fill('Write the spec');
+  await duration.fill('0:00');
+  await add.click();
+  await error.waitFor();
+  assert.ok(await error.isVisible(), 'a duration below 0:01 is refused with an error message');
+  assert.equal(await app.page.getByRole('listitem').filter({ hasText: 'Write the spec' }).count(), 0, 'no entry is added for a duration below 0:01');
+
+  await duration.fill('24:01');
+  await add.click();
+  assert.ok(await error.isVisible(), 'a duration above 24:00 is refused with an error message');
+  assert.equal(await app.page.getByRole('listitem').filter({ hasText: 'Write the spec' }).count(), 0, 'no entry is added for a duration above 24:00');
+
+  await duration.fill('0:01');
+  await add.click();
+  const entry = app.page.getByRole('listitem').filter({ hasText: 'Write the spec' });
+  await entry.waitFor();
+  assert.ok(await entry.getByText('0:01').isVisible(), 'a duration of 0:01 is accepted');
+  await app.screenshot('the manual duration constraint');
 });

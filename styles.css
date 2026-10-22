@@ -134,12 +134,35 @@ body.time-page main {
   flex: 1;
 }
 
-.entry .entry-project {
-  color: var(--muted);
-}
-
 .entry .entry-duration {
   font-variant-numeric: tabular-nums;
+}
+
+.entry .entry-project {
+  font: inherit;
+  color: var(--muted);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: calc(var(--space) / 2) var(--space);
+}
+
+.entry .entry-stop {
+  font: inherit;
+  font-weight: 600;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: calc(var(--space) / 2) var(--space);
+  cursor: pointer;
+}
+
+.error {
+  margin: 0;
+  min-height: 1em;
+  font-size: 14px;
+  color: #b3261e;
 }
 
 .day-total {
