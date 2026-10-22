@@ -34,36 +34,6 @@ test('axm-064fda01 the list shows each of today\'s entries with its duration and
   await app.screenshot('todays entries and the day total');
 });
 
-test('axm-10d3c252 a person types what they are working on and starts the timer, and Admin is chosen first', async (t) => {
-  const app = await openApp(t, { path: 'time.html' });
-  await app.page.evaluate(() => localStorage.clear());
-  await app.page.reload();
-
-  await app.page.getByRole('textbox', { name: 'What are you working on?' }).nth(0).fill('Fix the login bug');
-  await app.page.getByRole('button', { name: 'Start' }).click();
-
-  const entry = app.page.getByRole('listitem').filter({ hasText: 'Fix the login bug' });
-  await entry.waitFor();
-  const projectSelect = entry.getByRole('combobox', { name: 'Project for Fix the login bug' });
-  assert.equal(await projectSelect.inputValue(), 'Admin', 'Admin is chosen first for the entry');
-  assert.ok(await entry.getByText('Fix the login bug').isVisible(), 'the entry shows the typed work');
-
-  const duration = entry.getByText(/\d+:\d{2}:\d{2}/);
-  await duration.waitFor();
-  const first = await duration.textContent();
-  await app.page.waitForFunction(
-    (initial) => {
-      const match = document.querySelector('#entry-list').textContent.match(/\d+:\d{2}:\d{2}/);
-      return match && match[0] !== initial;
-    },
-    first,
-    { timeout: 5000 },
-  );
-  const second = await duration.textContent();
-  assert.notEqual(first, second, 'the entry appears with a running timer that keeps counting');
-  await app.screenshot('a typed entry with a running timer');
-});
-
 test('axm-23e754d4 the page header shows one egg emoji and the word Eggs together, centered', async (t) => {
   const app = await openApp(t, { path: 'time.html' });
   const header = app.page.getByRole('banner');
@@ -96,7 +66,7 @@ test('axm-c94eff98 when today has no entries the list says No time tracked today
   await app.screenshot('the empty state');
 });
 
-test('axm-59d65845 stopping a running timer records the elapsed time and the timer no longer runs', async (t) => {
+test('axm-019d8029 stopping a running timer records the elapsed time and the timer no longer runs', async (t) => {
   const app = await openApp(t, {
     path: 'time.html',
     beforeNavigate: async (page) => {
@@ -124,7 +94,7 @@ test('axm-59d65845 stopping a running timer records the elapsed time and the tim
   await app.screenshot('a stopped timer with its duration');
 });
 
-test('axm-6cfbe257 a person picks a project for an entry from the short list', async (t) => {
+test('axm-029d7ca7 a person picks a project for an entry from the short list', async (t) => {
   const app = await openApp(t, { path: 'time.html' });
   const startedAt = new Date().toISOString();
   await app.page.evaluate((startedAt) => {
@@ -162,7 +132,7 @@ test('axm-92abe8f3 a person adds an entry by hand with a duration', async (t) =>
   await app.screenshot('a manual entry with its duration');
 });
 
-test('axm-4681e632 deleting an entry removes it and an undo appears, announced to screen readers and reachable by keyboard', async (t) => {
+test('axm-996bd006 a person deletes an entry with an undo and choosing undo makes the entry reappear', async (t) => {
   const app = await openApp(t, { path: 'time.html' });
   const startedAt = new Date().toISOString();
   await app.page.evaluate((startedAt) => {
@@ -185,10 +155,15 @@ test('axm-4681e632 deleting an entry removes it and an undo appears, announced t
   await status.waitFor();
   const live = app.page.locator('[aria-live]');
   assert.ok(await live.filter({ hasText: 'Write the spec was deleted.' }).count() >= 1, 'the deletion is announced to screen readers through a live region');
-  await app.screenshot('an entry deleted with an undo');
+
+  await undo.click();
+  const restored = app.page.getByRole('listitem').filter({ hasText: 'Write the spec' });
+  await restored.waitFor();
+  assert.ok(await restored.getByText('0:05').isVisible(), 'the entry reappears in today\'s list');
+  await app.screenshot('an entry deleted with an undo, restored by choosing undo');
 });
 
-test('axm-6a917349 choosing undo after deleting an entry brings the entry back into today\'s list', async (t) => {
+test('axm-018f4215 a person deletes an entry from today\'s list and can undo the delete', async (t) => {
   const app = await openApp(t, { path: 'time.html' });
   const startedAt = new Date().toISOString();
   await app.page.evaluate((startedAt) => {
@@ -203,14 +178,21 @@ test('axm-6a917349 choosing undo after deleting an entry brings the entry back i
   await entry.getByRole('button', { name: 'Delete Write the spec' }).click();
   assert.equal(await app.page.getByRole('listitem').filter({ hasText: 'Write the spec' }).count(), 0, 'the entry is removed from today\'s list');
 
-  await app.page.getByRole('button', { name: 'Undo' }).click();
+  const undo = app.page.getByRole('button', { name: 'Undo' });
+  await undo.waitFor();
+  assert.ok(await undo.isVisible(), 'an undo offer appears');
+  assert.ok(await undo.isEnabled(), 'the undo is a real, enabled button reachable by keyboard');
+  const live = app.page.locator('[aria-live]');
+  assert.ok(await live.filter({ hasText: 'Write the spec was deleted.' }).count() >= 1, 'the deletion is announced to screen readers through a live region');
+
+  await undo.click();
   const restored = app.page.getByRole('listitem').filter({ hasText: 'Write the spec' });
   await restored.waitFor();
   assert.ok(await restored.getByText('0:05').isVisible(), 'the entry reappears in today\'s list with its duration');
   await app.screenshot('an entry restored by undo');
 });
 
-test('axm-ce528f45 a person edits an entry\'s work and duration and the entry shows the escaped edited work and duration', async (t) => {
+test('axm-013b8975 a person edits an entry\'s work and its duration and the entry shows the escaped edited work and duration', async (t) => {
   const app = await openApp(t, { path: 'time.html' });
   const startedAt = new Date().toISOString();
   await app.page.evaluate((startedAt) => {
@@ -234,6 +216,60 @@ test('axm-ce528f45 a person edits an entry\'s work and duration and the entry sh
   assert.equal(await edited.locator('b').count(), 0, 'the edited work is escaped and shows as text, not markup');
   assert.ok(await edited.getByText('<b>Fix the login bug</b>').isVisible(), 'the entry shows the escaped edited work');
   assert.ok(await edited.getByText('1:05').isVisible(), 'the entry shows the edited duration');
+  await app.screenshot('an entry with its escaped edited work and duration');
+});
+
+test('axm-df5c561d a person edits an entry\'s work and its duration and the entry shows the escaped edited work and the edited duration', async (t) => {
+  const app = await openApp(t, { path: 'time.html' });
+  const startedAt = new Date().toISOString();
+  await app.page.evaluate((startedAt) => {
+    localStorage.setItem('eggs.entries', JSON.stringify([
+      { id: 'seed-one', work: 'Write the spec', project: 'Admin', startedAt, running: false, duration: 300 },
+    ]));
+  }, startedAt);
+  await app.page.reload();
+
+  const entry = app.page.getByRole('listitem').filter({ hasText: 'Write the spec' });
+  await entry.waitFor();
+  await entry.getByRole('button', { name: 'Edit Write the spec' }).click();
+
+  const list = app.page.getByRole('list');
+  await list.getByRole('textbox', { name: 'Work' }).fill('<b>Review the pull request</b>');
+  await list.getByRole('textbox', { name: 'Duration' }).fill('0:20');
+  await list.getByRole('button', { name: 'Save' }).click();
+
+  const edited = app.page.getByRole('listitem').filter({ hasText: 'Review the pull request' });
+  await edited.waitFor();
+  assert.equal(await edited.locator('b').count(), 0, 'the edited work is escaped and shows as text, not markup');
+  assert.ok(await edited.getByText('<b>Review the pull request</b>').isVisible(), 'the entry shows the escaped edited work');
+  assert.ok(await edited.getByText('0:20').isVisible(), 'the entry shows the edited duration');
+  await app.screenshot('an entry with its escaped edited work and the edited duration');
+});
+
+test('axm-fbcc93a8 a person edits an entry\'s work and its duration and the entry shows the escaped edited work and duration', async (t) => {
+  const app = await openApp(t, { path: 'time.html' });
+  const startedAt = new Date().toISOString();
+  await app.page.evaluate((startedAt) => {
+    localStorage.setItem('eggs.entries', JSON.stringify([
+      { id: 'seed-one', work: 'Write the spec', project: 'Admin', startedAt, running: false, duration: 300 },
+    ]));
+  }, startedAt);
+  await app.page.reload();
+
+  const entry = app.page.getByRole('listitem').filter({ hasText: 'Write the spec' });
+  await entry.waitFor();
+  await entry.getByRole('button', { name: 'Edit Write the spec' }).click();
+
+  const list = app.page.getByRole('list');
+  await list.getByRole('textbox', { name: 'Work' }).fill('<b>Ship the release</b>');
+  await list.getByRole('textbox', { name: 'Duration' }).fill('2:30');
+  await list.getByRole('button', { name: 'Save' }).click();
+
+  const edited = app.page.getByRole('listitem').filter({ hasText: 'Ship the release' });
+  await edited.waitFor();
+  assert.equal(await edited.locator('b').count(), 0, 'the edited work is escaped and shows as text, not markup');
+  assert.ok(await edited.getByText('<b>Ship the release</b>').isVisible(), 'the entry shows the escaped edited work');
+  assert.ok(await edited.getByText('2:30').isVisible(), 'the entry shows the edited duration');
   await app.screenshot('an entry with its escaped edited work and duration');
 });
 
@@ -276,7 +312,7 @@ test('axm-c182ae03 a manual duration input is constrained to a value from 0:01 t
   await app.screenshot('the manual duration constraint');
 });
 
-test('axm-09f68120 a person types what they are working on and starts the timer, and Admin is chosen first', async (t) => {
+test('axm-10d3c252 a person types what they are working on and starts the timer, and Admin is chosen first', async (t) => {
   const app = await openApp(t, { path: 'time.html' });
   await app.page.evaluate(() => localStorage.clear());
   await app.page.reload();
@@ -304,26 +340,6 @@ test('axm-09f68120 a person types what they are working on and starts the timer,
   const second = await duration.textContent();
   assert.notEqual(first, second, 'the entry appears with a running timer that keeps counting');
   await app.screenshot('a typed entry with a running timer');
-});
-
-test('axm-2e00240f a person picks a project for an entry from the short list', async (t) => {
-  const app = await openApp(t, { path: 'time.html' });
-  const startedAt = new Date().toISOString();
-  await app.page.evaluate((startedAt) => {
-    localStorage.setItem('eggs.entries', JSON.stringify([
-      { id: 'seed-one', work: 'Write the spec', project: 'Admin', startedAt, running: false, duration: 300 },
-    ]));
-  }, startedAt);
-  await app.page.reload();
-
-  const entry = app.page.getByRole('listitem').filter({ hasText: 'Write the spec' });
-  await entry.waitFor();
-  const projectSelect = entry.getByRole('combobox', { name: 'Project for Write the spec' });
-  assert.equal(await projectSelect.inputValue(), 'Admin', 'the entry exists with Admin chosen');
-
-  await projectSelect.selectOption('Client work');
-  assert.equal(await projectSelect.inputValue(), 'Client work', 'the entry shows Client work');
-  await app.screenshot('an entry with the picked project');
 });
 
 test('axm-2e2279ba a person adds an entry by hand with a duration', async (t) => {
@@ -389,20 +405,6 @@ test('axm-58939af0 the core loop for one day is start, stop, correct and total',
   await total.waitFor();
   assert.ok(await total.isVisible(), 'the day\'s total equals the sum of the entries\' durations');
   await app.screenshot('the core loop: start, stop, correct and total');
-});
-
-test('axm-6282004a when today has no entries the list says No time tracked today and the total reads 0:00', async (t) => {
-  const app = await openApp(t, { path: 'time.html' });
-  await app.page.evaluate(() => localStorage.clear());
-  await app.page.reload();
-
-  const empty = app.page.getByText('No time tracked today.');
-  await empty.waitFor();
-  assert.ok(await empty.isVisible(), 'the list says No time tracked today.');
-  const total = app.page.getByText('0:00');
-  await total.waitFor();
-  assert.ok(await total.isVisible(), 'the total reads 0:00');
-  await app.screenshot('the empty state');
 });
 
 test('axm-a92981e1 when today\'s list is empty a person adds an entry by hand with a duration', async (t) => {

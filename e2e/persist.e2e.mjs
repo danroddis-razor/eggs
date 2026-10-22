@@ -4,7 +4,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { openApp } from './support/browser.mjs';
 
-test('axm-46838f30 each action saves the entry before it returns and a saved entry remains after a reload', async (t) => {
+test('axm-3ad8ee86 each action saves the entry before it returns and a saved entry remains after a reload', async (t) => {
   const app = await openApp(t, { path: 'time.html' });
   await app.page.evaluate(() => localStorage.clear());
   await app.page.reload();
@@ -102,7 +102,7 @@ test('axm-a6d8cd59 the outputs include the entry list with durations, the day to
   await app.screenshot('the outputs: list, total, running timer, undo, and error');
 });
 
-test('axm-e7441746 when the page reloads an entry that exists for today still appears with its work, its project and its duration', async (t) => {
+test('axm-4f26ae62 when the page reloads an entry that exists for today still appears with its work, its project and its duration', async (t) => {
   const app = await openApp(t, { path: 'time.html' });
   const startedAt = new Date().toISOString();
   await app.page.evaluate((startedAt) => {
@@ -119,6 +119,25 @@ test('axm-e7441746 when the page reloads an entry that exists for today still ap
   assert.equal(await projectSelect.inputValue(), 'Client work', 'the entry still appears with its project');
   assert.ok(await entry.getByText('0:05').isVisible(), 'the entry still appears with its duration');
   await app.screenshot('an entry that survives a reload with its work, project and duration');
+});
+
+test('axm-752b8208 when the page reloads an existing entry still appears with its work, its project and its duration', async (t) => {
+  const app = await openApp(t, { path: 'time.html' });
+  const startedAt = new Date().toISOString();
+  await app.page.evaluate((startedAt) => {
+    localStorage.setItem('eggs.entries', JSON.stringify([
+      { id: 'seed-one', work: 'Review the pull request', project: 'Internal', startedAt, running: false, duration: 600 },
+    ]));
+  }, startedAt);
+  await app.page.reload();
+
+  const entry = app.page.getByRole('listitem').filter({ hasText: 'Review the pull request' });
+  await entry.waitFor();
+  assert.ok(await entry.getByText('Review the pull request').isVisible(), 'the entry still appears with its work');
+  const projectSelect = entry.getByRole('combobox', { name: 'Project for Review the pull request' });
+  assert.equal(await projectSelect.inputValue(), 'Internal', 'the entry still appears with its project');
+  assert.ok(await entry.getByText('0:10').isVisible(), 'the entry still appears with its duration');
+  await app.screenshot('an existing entry that survives a reload with its work, project and duration');
 });
 
 test('axm-ebaa74a8 when an action fails the system shows an error message', async (t) => {
