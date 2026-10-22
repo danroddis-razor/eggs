@@ -1,0 +1,47 @@
+{
+  "schema": "axiom.precursor.attempt-causation-delta",
+  "schemaVersion": 1,
+  "targetRevision": "9cbe8d563eb38d0bd9aa63038adf99cf5fc1bbbe",
+  "changes": [
+    {
+      "path": "e2e/support/browser.mjs",
+      "disposition": 0,
+      "requirementIdentity": "59d65845-34e6-f07c-5648-cdbd62415135"
+    },
+    {
+      "path": "e2e/time.e2e.mjs",
+      "disposition": 0,
+      "requirementIdentity": "59d65845-34e6-f07c-5648-cdbd62415135"
+    },
+    {
+      "path": "src/entries.mjs",
+      "disposition": 0,
+      "requirementIdentity": "59d65845-34e6-f07c-5648-cdbd62415135"
+    },
+    {
+      "path": "src/projects.mjs",
+      "disposition": 0,
+      "requirementIdentity": "6cfbe257-b3d5-c2b3-c5d3-b8946171c98c"
+    },
+    {
+      "path": "src/time.mjs",
+      "disposition": 0,
+      "requirementIdentity": "59d65845-34e6-f07c-5648-cdbd62415135"
+    },
+    {
+      "path": "styles.css",
+      "disposition": 0,
+      "requirementIdentity": "6cfbe257-b3d5-c2b3-c5d3-b8946171c98c"
+    },
+    {
+      "path": "tests/entries.test.mjs",
+      "disposition": 0,
+      "requirementIdentity": "c182ae03-b4f7-4674-3c55-d145b578c79c"
+    },
+    {
+      "path": "time.html",
+      "disposition": 0,
+      "requirementIdentity": "c182ae03-b4f7-4674-3c55-d145b578c79c"
+    }
+  ]
+}

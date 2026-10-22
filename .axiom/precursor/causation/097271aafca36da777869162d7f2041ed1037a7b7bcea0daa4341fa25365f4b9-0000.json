@@ -1,0 +1,47 @@
+{
+  "schema": "axiom.precursor.attempt-causation-delta",
+  "schemaVersion": 1,
+  "targetRevision": "789f2d834ab7915e793b2588e929dcce0da0ec15",
+  "changes": [
+    {
+      "path": "e2e/probe.e2e.mjs",
+      "disposition": 0,
+      "requirementIdentity": "10d3c252-495c-8ab8-40ae-c3d2e6c06511"
+    },
+    {
+      "path": "e2e/time.e2e.mjs",
+      "disposition": 0,
+      "requirementIdentity": "10d3c252-495c-8ab8-40ae-c3d2e6c06511"
+    },
+    {
+      "path": "src/entries.mjs",
+      "disposition": 0,
+      "requirementIdentity": "10d3c252-495c-8ab8-40ae-c3d2e6c06511"
+    },
+    {
+      "path": "src/projects.mjs",
+      "disposition": 0,
+      "requirementIdentity": "10d3c252-495c-8ab8-40ae-c3d2e6c06511"
+    },
+    {
+      "path": "src/store.mjs",
+      "disposition": 0,
+      "requirementIdentity": "10d3c252-495c-8ab8-40ae-c3d2e6c06511"
+    },
+    {
+      "path": "src/time.mjs",
+      "disposition": 0,
+      "requirementIdentity": "10d3c252-495c-8ab8-40ae-c3d2e6c06511"
+    },
+    {
+      "path": "styles.css",
+      "disposition": 0,
+      "requirementIdentity": "064fda01-6321-8746-02d1-0d08a773fbbc"
+    },
+    {
+      "path": "time.html",
+      "disposition": 0,
+      "requirementIdentity": "10d3c252-495c-8ab8-40ae-c3d2e6c06511"
+    }
+  ]
+}
