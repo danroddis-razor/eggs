@@ -1,0 +1,12 @@
+{
+  "schema": "axiom.precursor.verification-policy",
+  "schemaVersion": 1,
+  "advisory": [
+    {
+      "checkIdentityPrefix": "invariant-required-fallback:v1:"
+    },
+    {
+      "checkIdentityPrefix": "invariant-assumed-check:v1:"
+    }
+  ]
+}
