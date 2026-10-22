@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Eggs — Time</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="time-page">
+  <header class="egg-header">
+    <span class="egg-emoji" aria-hidden="true">🥚</span>
+    <h1 class="egg-word">Eggs</h1>
+  </header>
+  <main>
+    <form class="new-entry" id="new-entry">
+      <label for="work">What are you working on?</label>
+      <input type="text" id="work" name="work" autocomplete="off">
+      <label for="project">Project</label>
+      <select id="project" name="project"></select>
+      <button type="button" id="start">Start</button>
+    </form>
+    <ul id="entry-list" class="entry-list"></ul>
+    <p class="day-total">Total <span id="day-total">0:00</span></p>
+  </main>
+  <script type="module" src="src/time.mjs"></script>
+</body>
+</html>

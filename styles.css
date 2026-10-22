@@ -56,3 +56,97 @@ body {
   font-weight: 600;
   color: var(--text);
 }
+
+/* The time page keeps the egg header at the top and fills the rest with the day's work. */
+body.time-page {
+  justify-content: flex-start;
+  padding: calc(var(--space) * 4) calc(var(--space) * 2);
+}
+
+body.time-page main {
+  width: 100%;
+  max-width: 640px;
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--space) * 3);
+}
+
+.new-entry {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: calc(var(--space) * 2);
+}
+
+.new-entry label {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.new-entry input,
+.new-entry select {
+  font: inherit;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: var(--space);
+}
+
+.new-entry button {
+  font: inherit;
+  font-weight: 600;
+  color: #fff;
+  background: var(--accent);
+  border: none;
+  border-radius: var(--radius);
+  padding: var(--space);
+  cursor: pointer;
+}
+
+.entry-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space);
+}
+
+.entry-list .empty {
+  color: var(--muted);
+}
+
+.entry {
+  display: flex;
+  align-items: baseline;
+  gap: calc(var(--space) * 2);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: var(--space) calc(var(--space) * 2);
+}
+
+.entry .entry-work {
+  flex: 1;
+}
+
+.entry .entry-project {
+  color: var(--muted);
+}
+
+.entry .entry-duration {
+  font-variant-numeric: tabular-nums;
+}
+
+.day-total {
+  margin: 0;
+  font-weight: 600;
+}
+
+.day-total #day-total {
+  font-variant-numeric: tabular-nums;
+}
