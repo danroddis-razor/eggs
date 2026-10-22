@@ -62,6 +62,15 @@
       ]
     },
     {
+      "requirementIdentity": "46838f30-1c42-8990-3377-df516d8b3cf0",
+      "paths": [
+        {
+          "path": "src/time.mjs",
+          "targetRevision": "a4f5734eac0207c9909c5001e9a5eac2815dde49"
+        }
+      ]
+    },
+    {
       "requirementIdentity": "59d65845-34e6-f07c-5648-cdbd62415135",
       "paths": [
         {
@@ -92,6 +101,15 @@
         {
           "path": "styles.css",
           "targetRevision": "9cbe8d563eb38d0bd9aa63038adf99cf5fc1bbbe"
+        }
+      ]
+    },
+    {
+      "requirementIdentity": "a6d8cd59-451b-01b7-3116-8b12a057ae0b",
+      "paths": [
+        {
+          "path": "e2e/persist.e2e.mjs",
+          "targetRevision": "a4f5734eac0207c9909c5001e9a5eac2815dde49"
         }
       ]
     },
@@ -143,6 +161,15 @@
         {
           "path": "tests/entries.test.mjs",
           "targetRevision": "48101c345fdac1e9b3ef2ca878a6f8c255ba2d99"
+        }
+      ]
+    },
+    {
+      "requirementIdentity": "ebaa74a8-7fb5-5ee5-ebb6-6f59f751217a",
+      "paths": [
+        {
+          "path": "time.html",
+          "targetRevision": "a4f5734eac0207c9909c5001e9a5eac2815dde49"
         }
       ]
     }
