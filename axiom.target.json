@@ -1,0 +1,18 @@
+{
+  "schema": "axiom.target-repository-contract",
+  "schemaVersion": 1,
+  "bootstrap": null,
+  "gates": {
+    "build": null,
+    "staticAnalysis": null,
+    "unitTest": {
+      "script": "mkdir -p reports && node --test --test-reporter=junit --test-reporter-destination=reports/unit.junit.xml --test-reporter=spec --test-reporter-destination=stdout \"tests/**/*.test.mjs\"",
+      "results": { "format": "junit-xml", "path": "reports/unit.junit.xml" }
+    },
+    "endToEndTest": {
+      "script": "mkdir -p reports/screenshots && node --test --test-concurrency=1 --test-reporter=junit --test-reporter-destination=reports/e2e.junit.xml --test-reporter=spec --test-reporter-destination=stdout \"e2e/**/*.e2e.mjs\"",
+      "results": { "format": "junit-xml", "path": "reports/e2e.junit.xml" },
+      "artifacts": { "path": "reports/screenshots" }
+    }
+  }
+}

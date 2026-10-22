@@ -1,0 +1,45 @@
+{
+  "schema": "axiom.blueprint",
+  "schemaVersion": 2,
+  "identity": "eggs-web",
+  "version": "1",
+  "appliesWhen": [
+    {
+      "fact": "target_path",
+      "value": "axiom.target.json"
+    },
+    {
+      "fact": "target_file_contains",
+      "path": "package.json",
+      "value": "\"name\": \"eggs\""
+    }
+  ],
+  "card": {
+    "forWork": "Building or changing the Eggs web app: a static page with plain ES modules, localStorage, and Node and Playwright tests.",
+    "useWhen": "The work adds or changes a screen, a record or its rules in Eggs.",
+    "doNotUseWhen": "The work only changes specifications or the repository's gate declaration.",
+    "startWith": "adoption.md",
+    "documents": [
+      {
+        "path": "adoption.md",
+        "holds": "The order to work in: records, modules, storage, page, tests.",
+        "bytes": 1053
+      },
+      {
+        "path": "guidance.md",
+        "holds": "Where each file goes, markup and behaviour rules, and what not to do.",
+        "bytes": 1526
+      },
+      {
+        "path": "tokens.md",
+        "holds": "The colour, space, radius and type tokens, light and dark.",
+        "bytes": 783
+      },
+      {
+        "path": "testing.md",
+        "holds": "How unit and end-to-end tests are written, named and screenshotted.",
+        "bytes": 1378
+      }
+    ]
+  }
+}
