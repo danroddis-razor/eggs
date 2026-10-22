@@ -1,0 +1,32 @@
+{
+  "schema": "axiom.precursor.attempt-causation-delta",
+  "schemaVersion": 1,
+  "targetRevision": "0116639427b71b1bef1e0ffe3e5f596b9a03a61f",
+  "changes": [
+    {
+      "path": "e2e/egg.e2e.mjs",
+      "disposition": 0,
+      "requirementIdentity": "2d2baaae-0eb8-c989-cd01-1b2e3f757925"
+    },
+    {
+      "path": "src/clients.mjs",
+      "disposition": 0,
+      "requirementIdentity": "496ce038-8b9b-3fa7-8c85-597ae8a1b90a"
+    },
+    {
+      "path": "src/projects.mjs",
+      "disposition": 0,
+      "requirementIdentity": "496ce038-8b9b-3fa7-8c85-597ae8a1b90a"
+    },
+    {
+      "path": "src/store.mjs",
+      "disposition": 0,
+      "requirementIdentity": "496ce038-8b9b-3fa7-8c85-597ae8a1b90a"
+    },
+    {
+      "path": "tests/projects.test.mjs",
+      "disposition": 0,
+      "requirementIdentity": "496ce038-8b9b-3fa7-8c85-597ae8a1b90a"
+    }
+  ]
+}

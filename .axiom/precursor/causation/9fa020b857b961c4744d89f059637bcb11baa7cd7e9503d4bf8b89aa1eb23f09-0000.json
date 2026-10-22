@@ -1,0 +1,47 @@
+{
+  "schema": "axiom.precursor.attempt-causation-delta",
+  "schemaVersion": 1,
+  "targetRevision": "7cae561ed176956092265838d2ceabe853a0792d",
+  "changes": [
+    {
+      "path": "clients.html",
+      "disposition": 0,
+      "requirementIdentity": "3ebc395b-26f0-5efb-1ebf-697769b437de"
+    },
+    {
+      "path": "e2e/clients.e2e.mjs",
+      "disposition": 0,
+      "requirementIdentity": "ab50b0c4-33b2-e056-8578-e861089352fe"
+    },
+    {
+      "path": "src/clients-page.mjs",
+      "disposition": 0,
+      "requirementIdentity": "3ebc395b-26f0-5efb-1ebf-697769b437de"
+    },
+    {
+      "path": "src/clients.mjs",
+      "disposition": 0,
+      "requirementIdentity": "ab50b0c4-33b2-e056-8578-e861089352fe"
+    },
+    {
+      "path": "src/projects.mjs",
+      "disposition": 0,
+      "requirementIdentity": "ab50b0c4-33b2-e056-8578-e861089352fe"
+    },
+    {
+      "path": "src/time.mjs",
+      "disposition": 0,
+      "requirementIdentity": "73b4a8b7-8094-bfac-f03a-dde1a9a7e7ea"
+    },
+    {
+      "path": "tests/projects.test.mjs",
+      "disposition": 0,
+      "requirementIdentity": "43539a78-37c1-4b7e-8320-0b9bbaf2f6ec"
+    },
+    {
+      "path": "time.html",
+      "disposition": 0,
+      "requirementIdentity": "8a77c0a8-bb91-90b5-7b9e-4bbd88fdaea4"
+    }
+  ]
+}
