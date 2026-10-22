@@ -73,3 +73,8 @@ export function clampDuration(seconds) {
 export function stopEntry(entry, now = new Date()) {
   return { ...entry, running: false, duration: entryDuration(entry, now) };
 }
+
+// Editing an entry's work and duration keeps its identity, project and start.
+export function editEntry(entry, { work, duration }) {
+  return { ...entry, work, duration };
+}

@@ -7,6 +7,7 @@ import {
   parseDuration,
   clampDuration,
   stopEntry,
+  editEntry,
 } from '../src/entries.mjs';
 
 test('stopping a running timer records the elapsed time and the timer no longer runs', (t) => {
@@ -19,6 +20,17 @@ test('stopping a running timer records the elapsed time and the timer no longer 
   assert.equal(stopped.running, false, 'the timer no longer runs');
   assert.equal(stopped.duration, 330, 'the entry records the elapsed time between starting and stopping');
   assert.equal(entryDuration(stopped), 330, 'the entry shows a duration equal to the elapsed time');
+});
+
+test('editing an entry changes its work and duration and keeps its identity, project and start', (t) => {
+  const entry = { id: 'one', work: 'Write the spec', project: 'Admin', startedAt: '2025-01-07T10:00:00.000Z', running: false, duration: 300 };
+  const edited = editEntry(entry, { work: '<b>Fix the login bug</b>', duration: 3900 });
+  assert.equal(edited.id, 'one', 'the entry keeps its identity');
+  assert.equal(edited.project, 'Admin', 'the entry keeps its project');
+  assert.equal(edited.startedAt, '2025-01-07T10:00:00.000Z', 'the entry keeps its start');
+  assert.equal(edited.work, '<b>Fix the login bug</b>', 'the entry carries the edited work');
+  assert.equal(edited.duration, 3900, 'the entry carries the edited duration');
+  assert.equal(entry.work, 'Write the spec', 'the original entry is not changed');
 });
 
 test('a manual entry carries the duration a person typed', (t) => {
