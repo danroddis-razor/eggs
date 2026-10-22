@@ -1,7 +1,14 @@
 // The rules of a project, as pure functions over plain objects. No page, no storage.
+import { todayKey } from './entries.mjs';
 
 // The short list of projects a person can pick for an entry. Admin comes first.
 export const PROJECTS = ['Admin', 'Client work', 'Internal'];
+
+// The default client a person sees when no projects exist yet.
+export const DEFAULT_CLIENT = { id: 'eggs', name: 'Eggs' };
+
+// A project name is up to 100 characters.
+export const MAX_PROJECT_NAME = 100;
 
 // A new project, ready to be saved.
 export function makeProject({ name, clientId, rate, billable }) {
@@ -13,6 +20,18 @@ export function makeProject({ name, clientId, rate, billable }) {
     billable,
     archived: false,
   };
+}
+
+// A project name is valid when it is not empty and is at most 100 characters.
+export function isValidProjectName(name) {
+  const value = String(name ?? '').trim();
+  return value.length > 0 && value.length <= MAX_PROJECT_NAME;
+}
+
+// An hourly rate is valid when it is a number of zero or more pounds.
+export function isValidRate(rate) {
+  const value = Number(rate);
+  return Number.isFinite(value) && value >= 0;
 }
 
 // Archiving a project hides it from the picker but keeps its entries.
@@ -28,4 +47,58 @@ export function activeProjects(projects) {
 // The projects that belong to a client.
 export function projectsForClient(projects, clientId) {
   return (projects ?? []).filter((p) => p.clientId === clientId);
+}
+
+// The picker's groups: the active projects grouped by client, in the order the
+// clients were added. When no projects exist yet, the default Eggs client offers
+// Admin, Client work and Internal, with Admin first.
+export function pickerGroups(clients, projects) {
+  const active = activeProjects(projects);
+  if (active.length === 0) {
+    return [
+      {
+        client: DEFAULT_CLIENT,
+        projects: PROJECTS.map((name) => ({ id: name, name, clientId: DEFAULT_CLIENT.id, rate: 0, billable: false, archived: false })),
+      },
+    ];
+  }
+  return (clients ?? [])
+    .map((client) => ({
+      client,
+      projects: active.filter((p) => p.clientId === client.id),
+    }))
+    .filter((group) => group.projects.length > 0);
+}
+
+// The first project a person can pick: the first listed project of the first group.
+export function firstPickerProject(clients, projects) {
+  const groups = pickerGroups(clients, projects);
+  const first = groups[0]?.projects[0];
+  return first ? first.name : null;
+}
+
+// A rate shows in pounds with two decimals, for example £75.00.
+export function formatRate(rate) {
+  const value = Number(rate);
+  const safe = Number.isFinite(value) ? value : 0;
+  return `£${safe.toFixed(2)}`;
+}
+
+// The billable amount for a day: for each billable project, its hours today times
+// its own rate, added together. Entries carry the project's name.
+export function billableAmount(entries, projects, date = new Date()) {
+  const byName = new Map();
+  for (const project of projects ?? []) {
+    if (!byName.has(project.name)) byName.set(project.name, project);
+  }
+  let total = 0;
+  for (const entry of entries ?? []) {
+    if (entry.running) continue;
+    if (entry.startedAt && todayKey(new Date(entry.startedAt)) !== todayKey(date)) continue;
+    const project = byName.get(entry.project);
+    if (!project || !project.billable) continue;
+    const seconds = Math.max(0, Math.floor(entry.duration ?? 0));
+    total += (seconds / 3600) * Number(project.rate ?? 0);
+  }
+  return total;
 }
