@@ -45,6 +45,40 @@
       ]
     },
     {
+      "requirementIdentity": "59d65845-34e6-f07c-5648-cdbd62415135",
+      "paths": [
+        {
+          "path": "e2e/support/browser.mjs",
+          "targetRevision": "9cbe8d563eb38d0bd9aa63038adf99cf5fc1bbbe"
+        },
+        {
+          "path": "e2e/time.e2e.mjs",
+          "targetRevision": "9cbe8d563eb38d0bd9aa63038adf99cf5fc1bbbe"
+        },
+        {
+          "path": "src/entries.mjs",
+          "targetRevision": "9cbe8d563eb38d0bd9aa63038adf99cf5fc1bbbe"
+        },
+        {
+          "path": "src/time.mjs",
+          "targetRevision": "9cbe8d563eb38d0bd9aa63038adf99cf5fc1bbbe"
+        }
+      ]
+    },
+    {
+      "requirementIdentity": "6cfbe257-b3d5-c2b3-c5d3-b8946171c98c",
+      "paths": [
+        {
+          "path": "src/projects.mjs",
+          "targetRevision": "9cbe8d563eb38d0bd9aa63038adf99cf5fc1bbbe"
+        },
+        {
+          "path": "styles.css",
+          "targetRevision": "9cbe8d563eb38d0bd9aa63038adf99cf5fc1bbbe"
+        }
+      ]
+    },
+    {
       "requirementIdentity": "b30e430d-880c-ab7a-0a3a-bf2929413654",
       "paths": [
         {
@@ -62,6 +96,19 @@
         {
           "path": "styles.css",
           "targetRevision": "15aa2e988a69452aa2a1dd8177e50c2b087c0614"
+        }
+      ]
+    },
+    {
+      "requirementIdentity": "c182ae03-b4f7-4674-3c55-d145b578c79c",
+      "paths": [
+        {
+          "path": "tests/entries.test.mjs",
+          "targetRevision": "9cbe8d563eb38d0bd9aa63038adf99cf5fc1bbbe"
+        },
+        {
+          "path": "time.html",
+          "targetRevision": "9cbe8d563eb38d0bd9aa63038adf99cf5fc1bbbe"
         }
       ]
     }
