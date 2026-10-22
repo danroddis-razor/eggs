@@ -3,6 +3,48 @@
   "schemaVersion": 1,
   "entries": [
     {
+      "requirementIdentity": "064fda01-6321-8746-02d1-0d08a773fbbc",
+      "paths": [
+        {
+          "path": "styles.css",
+          "targetRevision": "789f2d834ab7915e793b2588e929dcce0da0ec15"
+        }
+      ]
+    },
+    {
+      "requirementIdentity": "10d3c252-495c-8ab8-40ae-c3d2e6c06511",
+      "paths": [
+        {
+          "path": "e2e/probe.e2e.mjs",
+          "targetRevision": "789f2d834ab7915e793b2588e929dcce0da0ec15"
+        },
+        {
+          "path": "e2e/time.e2e.mjs",
+          "targetRevision": "789f2d834ab7915e793b2588e929dcce0da0ec15"
+        },
+        {
+          "path": "src/entries.mjs",
+          "targetRevision": "789f2d834ab7915e793b2588e929dcce0da0ec15"
+        },
+        {
+          "path": "src/projects.mjs",
+          "targetRevision": "789f2d834ab7915e793b2588e929dcce0da0ec15"
+        },
+        {
+          "path": "src/store.mjs",
+          "targetRevision": "789f2d834ab7915e793b2588e929dcce0da0ec15"
+        },
+        {
+          "path": "src/time.mjs",
+          "targetRevision": "789f2d834ab7915e793b2588e929dcce0da0ec15"
+        },
+        {
+          "path": "time.html",
+          "targetRevision": "789f2d834ab7915e793b2588e929dcce0da0ec15"
+        }
+      ]
+    },
+    {
       "requirementIdentity": "b30e430d-880c-ab7a-0a3a-bf2929413654",
       "paths": [
         {
