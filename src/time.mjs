@@ -23,6 +23,18 @@ const status = main.querySelector('#status');
 // The entry a person just deleted, kept so an undo can bring it back.
 let pendingDelete = null;
 
+// Save the entries and, when the save fails, show an error message. Returns true
+// when the save succeeded, so the caller can keep the page in its last saved state.
+function persist(entries) {
+  try {
+    saveEntries(entries);
+    return true;
+  } catch {
+    error.textContent = 'Could not save. Your change was not saved.';
+    return false;
+  }
+}
+
 // The project list, with Admin first.
 for (const project of PROJECTS) {
   const option = document.createElement('option');
@@ -72,7 +84,7 @@ function draw() {
           const target = all.find((e) => e.id === entry.id);
           if (!target) return;
           target.project = project.value;
-          saveEntries(all);
+          if (!persist(all)) return;
           draw();
         });
         const duration = document.createElement('span');
@@ -92,7 +104,7 @@ function draw() {
             const index = all.findIndex((e) => e.id === entry.id);
             if (index === -1) return;
             all[index] = stopEntry(all[index]);
-            saveEntries(all);
+            if (!persist(all)) return;
             draw();
             syncTick();
           });
@@ -162,7 +174,7 @@ function editForm(entry) {
     const index = all.findIndex((e) => e.id === entry.id);
     if (index === -1) return;
     all[index] = editEntry(all[index], { work, duration: seconds });
-    saveEntries(all);
+    if (!persist(all)) return;
     editingId = null;
     draw();
     syncTick();
@@ -188,7 +200,7 @@ function deleteEntry(entry) {
   if (index === -1) return;
   pendingDelete = { entry: all[index], index };
   all.splice(index, 1);
-  saveEntries(all);
+  if (!persist(all)) return;
   status.textContent = `${entry.work} was deleted.`;
   const undo = document.createElement('button');
   undo.type = 'button';
@@ -198,7 +210,7 @@ function deleteEntry(entry) {
     if (!pendingDelete) return;
     const entries = loadEntries();
     entries.splice(Math.min(pendingDelete.index, entries.length), 0, pendingDelete.entry);
-    saveEntries(entries);
+    if (!persist(entries)) return;
     pendingDelete = null;
     status.replaceChildren();
     draw();
@@ -228,7 +240,7 @@ startButton.addEventListener('click', () => {
   const entry = makeEntry({ work, project, startedAt: new Date().toISOString() });
   const entries = loadEntries();
   entries.push(entry);
-  saveEntries(entries);
+  if (!persist(entries)) return;
   workInput.value = '';
   draw();
   syncTick();
@@ -252,7 +264,7 @@ addButton.addEventListener('click', () => {
   entry.duration = seconds;
   const entries = loadEntries();
   entries.push(entry);
-  saveEntries(entries);
+  if (!persist(entries)) return;
   manualWorkInput.value = '';
   manualDurationInput.value = '';
   draw();
