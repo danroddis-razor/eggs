@@ -237,6 +237,63 @@ test('axm-8a77c0a8 the day\'s total shows the billable amount: billable hours ti
   await app.screenshot('the day\'s total with the billable amount');
 });
 
+test('axm-bd0c0c09 each saved client, project or archive saves before returning, archiving hides the project and keeps its entries', async (t) => {
+  const app = await openApp(t, { path: 'clients.html' });
+  await app.page.evaluate(() => localStorage.clear());
+  await app.page.reload();
+
+  // Add a client: the save happens before the action returns.
+  await app.page.getByRole('textbox', { name: 'Client name' }).fill('Acme');
+  await app.page.getByRole('button', { name: 'Add client' }).click();
+  await app.page.getByRole('listitem').filter({ hasText: 'Acme' }).waitFor();
+  const savedClients = await app.page.evaluate(() => JSON.parse(localStorage.getItem('eggs.clients')));
+  assert.ok(savedClients.some((c) => c.name === 'Acme'), 'the add-client action saved the client before returning');
+
+  // Add a project under the client: the save happens before the action returns.
+  await app.page.getByRole('textbox', { name: 'Project name' }).fill('Design');
+  await app.page.getByRole('spinbutton', { name: 'Hourly rate (£)' }).fill('75');
+  await app.page.getByRole('checkbox', { name: 'Billable' }).check();
+  await app.page.getByRole('button', { name: 'Add project' }).click();
+  const project = app.page.getByRole('listitem').filter({ hasText: 'Design' }).last();
+  await project.waitFor();
+  const savedProjects = await app.page.evaluate(() => JSON.parse(localStorage.getItem('eggs.projects')));
+  assert.ok(savedProjects.some((p) => p.name === 'Design' && p.rate === 75 && p.billable === true), 'the add-project action saved the project before returning');
+
+  // Archive the project: the save happens before the action returns.
+  await project.getByRole('button', { name: 'Archive Design' }).click();
+  const archivedProjects = await app.page.evaluate(() => JSON.parse(localStorage.getItem('eggs.projects')));
+  assert.equal(archivedProjects.find((p) => p.name === 'Design').archived, true, 'the archive action saved the project before returning');
+
+  // Archiving hides the project from the picker on the time page.
+  const timeApp = await openApp(t, { path: 'time.html' });
+  await timeApp.page.reload();
+  const picker = timeApp.page.getByRole('combobox', { name: 'Project' });
+  await picker.waitFor();
+  const options = await picker.locator('option').allTextContents();
+  assert.ok(!options.includes('Design'), 'the archived project is hidden from the picker');
+
+  // The archived project's entries remain.
+  const startedAt = new Date().toISOString();
+  await timeApp.page.evaluate((startedAt) => {
+    localStorage.setItem('eggs.entries', JSON.stringify([
+      { id: 'e1', work: 'Design the logo', project: 'Design', startedAt, running: false, duration: 3600 },
+    ]));
+  }, startedAt);
+  await timeApp.page.reload();
+  const entry = timeApp.page.getByRole('listitem').filter({ hasText: 'Design the logo' });
+  await entry.waitFor();
+  assert.ok(await entry.getByText('1:00').isVisible(), 'the archived project keeps its entries');
+  const entries = await timeApp.page.evaluate(() => JSON.parse(localStorage.getItem('eggs.entries')));
+  assert.ok(entries.some((e) => e.project === 'Design'), 'the archived project\'s entries remain in storage');
+
+  // A saved entry remains after a reload.
+  await timeApp.page.reload();
+  const reloaded = timeApp.page.getByRole('listitem').filter({ hasText: 'Design the logo' });
+  await reloaded.waitFor();
+  assert.ok(await reloaded.getByText('1:00').isVisible(), 'a saved entry remains after a reload');
+  await app.screenshot('saved before returning, picker hides archived, entry remains after reload');
+});
+
 test('axm-9309af5d each saved client, project, or archive is saved before the action returns, and a saved entry remains after a reload', async (t) => {
   const app = await openApp(t, { path: 'clients.html' });
   await app.page.evaluate(() => localStorage.clear());

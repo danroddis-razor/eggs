@@ -14,14 +14,11 @@ test('axm-3ad8ee86 each action saves the entry before it returns and a saved ent
   await app.page.getByRole('textbox', { name: 'Work', exact: true }).fill('Write the spec');
   await app.page.getByRole('textbox', { name: 'Duration' }).fill('0:05');
   await app.page.getByRole('button', { name: 'Add' }).click();
-
-  const entry = app.page.getByRole('listitem').filter({ hasText: 'Write the spec' });
-  await entry.waitFor();
-  assert.ok(await entry.getByText('0:05').isVisible(), 'the added entry appears with its duration');
-
-  // The save happened before the action returned: the entry is in storage now.
-  const saved = await app.page.evaluate(() => JSON.parse(localStorage.getItem('eggs.entries')));
-  assert.ok(saved.some((e) => e.work === 'Write the spec' && e.duration === 300), 'the add action saved the entry before returning');
+  const added = app.page.getByRole('listitem').filter({ hasText: 'Write the spec' });
+  await added.waitFor();
+  assert.ok(await added.getByText('0:05').isVisible(), 'the added entry appears with its duration');
+  const savedAfterAdd = await app.page.evaluate(() => JSON.parse(localStorage.getItem('eggs.entries')));
+  assert.ok(savedAfterAdd.some((e) => e.work === 'Write the spec' && e.duration === 300 && e.running === false), 'the add action saved the entry before returning');
 
   // Start a timer: the action saves before it returns.
   await app.page.getByRole('textbox', { name: 'What are you working on?' }).nth(0).fill('Fix the login bug');
@@ -38,14 +35,25 @@ test('axm-3ad8ee86 each action saves the entry before it returns and a saved ent
   assert.equal(stopped.running, false, 'the stop action saved the entry before returning');
   assert.ok(typeof stopped.duration === 'number', 'the stopped entry carries its duration in storage');
 
+  // Edit the entry: the action saves before it returns.
+  await added.getByRole('button', { name: 'Edit Write the spec' }).click();
+  const list = app.page.getByRole('list');
+  await list.getByRole('textbox', { name: 'Work' }).fill('Write the spec');
+  await list.getByRole('textbox', { name: 'Duration' }).fill('0:10');
+  await list.getByRole('button', { name: 'Save' }).click();
+  const savedAfterEdit = await app.page.evaluate(() => JSON.parse(localStorage.getItem('eggs.entries')));
+  assert.ok(savedAfterEdit.some((e) => e.work === 'Write the spec' && e.duration === 600), 'the edit action saved the entry before returning');
+
+  // Delete the entry: the action saves before it returns.
+  await added.getByRole('button', { name: 'Delete Write the spec' }).click();
+  const savedAfterDelete = await app.page.evaluate(() => JSON.parse(localStorage.getItem('eggs.entries')));
+  assert.ok(!savedAfterDelete.some((e) => e.work === 'Write the spec'), 'the delete action saved the entry before returning');
+
   // A saved entry remains after a reload.
   await app.page.reload();
-  const reloaded = app.page.getByRole('listitem').filter({ hasText: 'Write the spec' });
+  const reloaded = app.page.getByRole('listitem').filter({ hasText: 'Fix the login bug' });
   await reloaded.waitFor();
-  assert.ok(await reloaded.getByText('0:05').isVisible(), 'the saved entry remains after a reload');
-  const reloadedStopped = app.page.getByRole('listitem').filter({ hasText: 'Fix the login bug' });
-  await reloadedStopped.waitFor();
-  assert.ok(await reloadedStopped.getByText('0:00').isVisible(), 'the stopped entry remains after a reload with its duration');
+  assert.ok(await reloaded.getByText('0:00').isVisible(), 'the saved entry remains after a reload with its duration');
   await app.screenshot('entries saved before returning and remaining after a reload');
 });
 
@@ -104,19 +112,25 @@ test('axm-a6d8cd59 the outputs include the entry list with durations, the day to
 
 test('axm-4f26ae62 when the page reloads an entry that exists for today still appears with its work, its project and its duration', async (t) => {
   const app = await openApp(t, { path: 'time.html' });
-  const startedAt = new Date().toISOString();
-  await app.page.evaluate((startedAt) => {
-    localStorage.setItem('eggs.entries', JSON.stringify([
-      { id: 'seed-one', work: 'Write the spec', project: 'Client work', startedAt, running: false, duration: 300 },
-    ]));
-  }, startedAt);
+  await app.page.evaluate(() => localStorage.clear());
   await app.page.reload();
 
+  // Create the entry through the page's own actions, so the page must save it.
+  await app.page.getByRole('button', { name: 'Add an entry by hand' }).click();
+  await app.page.getByRole('textbox', { name: 'Work', exact: true }).fill('Write the spec');
+  await app.page.getByRole('textbox', { name: 'Duration' }).fill('0:05');
+  await app.page.getByRole('button', { name: 'Add' }).click();
+  const created = app.page.getByRole('listitem').filter({ hasText: 'Write the spec' });
+  await created.waitFor();
+  assert.ok(await created.getByText('0:05').isVisible(), 'the entry exists for today before the reload');
+
+  // When the page reloads, the entry that existed for today still appears.
+  await app.page.reload();
   const entry = app.page.getByRole('listitem').filter({ hasText: 'Write the spec' });
   await entry.waitFor();
   assert.ok(await entry.getByText('Write the spec').isVisible(), 'the entry still appears with its work');
   const projectSelect = entry.getByRole('combobox', { name: 'Project for Write the spec' });
-  assert.equal(await projectSelect.inputValue(), 'Client work', 'the entry still appears with its project');
+  assert.equal(await projectSelect.inputValue(), 'Admin', 'the entry still appears with its project');
   assert.ok(await entry.getByText('0:05').isVisible(), 'the entry still appears with its duration');
   await app.screenshot('an entry that survives a reload with its work, project and duration');
 });

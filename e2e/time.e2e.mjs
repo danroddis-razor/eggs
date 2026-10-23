@@ -469,30 +469,46 @@ test('axm-db4b1374 the page produces the entry list, the day\'s total, a running
   await app.page.evaluate(() => localStorage.clear());
   await app.page.reload();
 
-  // A running timer display and the day's total.
+  // Today's entry list with durations: add an entry by hand.
+  await app.page.getByRole('button', { name: 'Add an entry by hand' }).click();
+  await app.page.getByRole('textbox', { name: 'Work', exact: true }).fill('Write the spec');
+  await app.page.getByRole('textbox', { name: 'Duration' }).fill('0:05');
+  await app.page.getByRole('button', { name: 'Add' }).click();
+  const entry = app.page.getByRole('listitem').filter({ hasText: 'Write the spec' });
+  await entry.waitFor();
+  assert.ok(await entry.getByText('0:05').isVisible(), 'the entry list shows the entry with its duration');
+
+  // The day's total: the sum of the entries' durations.
+  const total = app.page.locator('#day-total');
+  await total.waitFor();
+  assert.equal(await total.textContent(), '0:05', 'the day\'s total equals the sum of the entries\' durations');
+
+  // A running timer display: start a timer.
   await app.page.getByRole('textbox', { name: 'What are you working on?' }).nth(0).fill('Fix the login bug');
   await app.page.getByRole('button', { name: 'Start' }).click();
-  const entry = app.page.getByRole('listitem').filter({ hasText: 'Fix the login bug' });
-  await entry.waitFor();
-  const running = entry.getByText(/\d+:\d{2}:\d{2}/);
+  const running = app.page.getByRole('listitem').filter({ hasText: 'Fix the login bug' });
   await running.waitFor();
-  assert.ok(await running.isVisible(), 'the page shows a running timer display');
-  const total = app.page.getByText('Total');
-  await total.waitFor();
-  assert.ok(await total.isVisible(), 'the page shows the day\'s total');
+  const timer = running.getByText(/\d+:\d{2}:\d{2}/);
+  await timer.waitFor();
+  assert.ok(await timer.isVisible(), 'the page shows a running timer display');
 
   // An undo offer after a delete.
-  await entry.getByRole('button', { name: 'Delete Fix the login bug' }).click();
+  await entry.getByRole('button', { name: 'Delete Write the spec' }).click();
+  assert.equal(await app.page.getByRole('listitem').filter({ hasText: 'Write the spec' }).count(), 0, 'the delete removes the entry from today\'s list');
   const undo = app.page.getByRole('button', { name: 'Undo' });
   await undo.waitFor();
   assert.ok(await undo.isVisible(), 'an undo offer appears after a delete');
 
-  // An error message when an action fails.
-  await app.page.getByRole('button', { name: 'Add an entry by hand' }).click();
-  await app.page.getByRole('textbox', { name: 'Work', exact: true }).fill('Write the spec');
-  await app.page.getByRole('textbox', { name: 'Duration' }).fill('0:00');
+  // An error message when an action fails: make every save fail, then add.
+  await app.page.evaluate(() => {
+    Storage.prototype.setItem = function () {
+      throw new Error('QuotaExceededError');
+    };
+  });
+  await app.page.getByRole('textbox', { name: 'Work', exact: true }).fill('Review the pull request');
+  await app.page.getByRole('textbox', { name: 'Duration' }).fill('0:05');
   await app.page.getByRole('button', { name: 'Add' }).click();
-  const error = app.page.getByText('Duration must be between 0:01 and 24:00.');
+  const error = app.page.getByText('Could not save. Your change was not saved.');
   await error.waitFor();
   assert.ok(await error.isVisible(), 'an error message appears when an action fails');
   await app.screenshot('the page\'s outputs: list, total, running timer, undo and error');
