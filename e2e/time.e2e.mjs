@@ -13,7 +13,7 @@ function seedTwoEntries() {
   ];
 }
 
-test('axm-064fda01 the list shows each of today\'s entries with its duration and the day\'s total', async (t) => {
+test('axm-ab40f54a the list shows each of today\'s entries with its duration and the day\'s total', async (t) => {
   const app = await openApp(t, { path: 'time.html' });
   await app.page.evaluate((entries) => localStorage.setItem('eggs.entries', JSON.stringify(entries)), seedTwoEntries());
   await app.page.reload();
@@ -66,7 +66,7 @@ test('axm-c94eff98 when today has no entries the list says No time tracked today
   await app.screenshot('the empty state');
 });
 
-test('axm-019d8029 stopping a running timer records the elapsed time and the timer no longer runs', async (t) => {
+test('axm-10710fbe stopping a running timer records the elapsed time and the timer no longer runs', async (t) => {
   const app = await openApp(t, {
     path: 'time.html',
     beforeNavigate: async (page) => {
@@ -91,10 +91,11 @@ test('axm-019d8029 stopping a running timer records the elapsed time and the tim
   await duration.waitFor();
   assert.ok(await duration.isVisible(), 'the entry shows a duration equal to the elapsed time between starting and stopping');
   assert.equal(await entry.getByRole('button', { name: 'Stop Fix the login bug' }).count(), 0, 'the timer no longer runs');
+  assert.equal(await app.page.getByText('0:05:30').count(), 0, 'the running elapsed display is gone after stopping');
   await app.screenshot('a stopped timer with its duration');
 });
 
-test('axm-029d7ca7 a person picks a project for an entry from the short list', async (t) => {
+test('axm-05c8ddbc a person picks a project for an entry from the short list', async (t) => {
   const app = await openApp(t, { path: 'time.html' });
   const startedAt = new Date().toISOString();
   await app.page.evaluate((startedAt) => {
@@ -114,7 +115,7 @@ test('axm-029d7ca7 a person picks a project for an entry from the short list', a
   await app.screenshot('an entry with the picked project');
 });
 
-test('axm-92abe8f3 a person adds an entry by hand with a duration', async (t) => {
+test('axm-8b3c2c13 a person adds an entry by hand with a duration', async (t) => {
   const app = await openApp(t, { path: 'time.html' });
   await app.page.evaluate(() => localStorage.clear());
   await app.page.reload();
@@ -175,7 +176,10 @@ test('axm-018f4215 a person deletes an entry from today\'s list and can undo the
 
   const entry = app.page.getByRole('listitem').filter({ hasText: 'Write the spec' });
   await entry.waitFor();
-  await entry.getByRole('button', { name: 'Delete Write the spec' }).click();
+  const deleteButton = entry.getByRole('button', { name: 'Delete Write the spec' });
+  await deleteButton.waitFor();
+  assert.ok(await deleteButton.isVisible(), 'the entry offers a delete action');
+  await deleteButton.click();
   assert.equal(await app.page.getByRole('listitem').filter({ hasText: 'Write the spec' }).count(), 0, 'the entry is removed from today\'s list');
 
   const undo = app.page.getByRole('button', { name: 'Undo' });
@@ -192,7 +196,7 @@ test('axm-018f4215 a person deletes an entry from today\'s list and can undo the
   await app.screenshot('an entry restored by undo');
 });
 
-test('axm-013b8975 a person edits an entry\'s work and its duration and the entry shows the escaped edited work and duration', async (t) => {
+test('axm-9a9e518c a person edits an entry\'s work and its duration and the entry shows the escaped edited work and duration', async (t) => {
   const app = await openApp(t, { path: 'time.html' });
   const startedAt = new Date().toISOString();
   await app.page.evaluate((startedAt) => {
@@ -204,7 +208,10 @@ test('axm-013b8975 a person edits an entry\'s work and its duration and the entr
 
   const entry = app.page.getByRole('listitem').filter({ hasText: 'Write the spec' });
   await entry.waitFor();
-  await entry.getByRole('button', { name: 'Edit Write the spec' }).click();
+  const editButton = entry.getByRole('button', { name: 'Edit Write the spec' });
+  await editButton.waitFor();
+  assert.ok(await editButton.isVisible(), 'the entry offers an edit action');
+  await editButton.click();
 
   const list = app.page.getByRole('list');
   await list.getByRole('textbox', { name: 'Work' }).fill('<b>Fix the login bug</b>');
@@ -258,7 +265,10 @@ test('axm-fbcc93a8 a person edits an entry\'s work and its duration and the entr
 
   const entry = app.page.getByRole('listitem').filter({ hasText: 'Write the spec' });
   await entry.waitFor();
-  await entry.getByRole('button', { name: 'Edit Write the spec' }).click();
+  const editButton = entry.getByRole('button', { name: 'Edit Write the spec' });
+  await editButton.waitFor();
+  assert.ok(await editButton.isVisible(), 'the entry offers an edit action');
+  await editButton.click();
 
   const list = app.page.getByRole('list');
   await list.getByRole('textbox', { name: 'Work' }).fill('<b>Ship the release</b>');
@@ -312,7 +322,7 @@ test('axm-c182ae03 a manual duration input is constrained to a value from 0:01 t
   await app.screenshot('the manual duration constraint');
 });
 
-test('axm-10d3c252 a person types what they are working on and starts the timer, and Admin is chosen first', async (t) => {
+test('axm-dc10fef6 a person types what they are working on and starts the timer, and Admin is chosen first', async (t) => {
   const app = await openApp(t, { path: 'time.html' });
   await app.page.evaluate(() => localStorage.clear());
   await app.page.reload();
@@ -401,9 +411,11 @@ test('axm-58939af0 the core loop for one day is start, stop, correct and total',
   await app.page.getByRole('button', { name: 'Add' }).click();
   const second = app.page.getByRole('listitem').filter({ hasText: 'Review the pull request' });
   await second.waitFor();
+  assert.ok(await second.getByText('0:05').isVisible(), 'the second entry shows its duration');
   const total = app.page.getByText('1:10');
   await total.waitFor();
   assert.ok(await total.isVisible(), 'the day\'s total equals the sum of the entries\' durations');
+  assert.ok(await app.page.getByText('Total 1:10').isVisible(), 'the total appears beneath the list as the day\'s total');
   await app.screenshot('the core loop: start, stop, correct and total');
 });
 
@@ -503,7 +515,10 @@ test('axm-f1ab2613 the page accepts the work typed, a project, start, stop, edit
   const options = await project.locator('option').allTextContents();
   assert.deepEqual(options, ['Admin', 'Client work', 'Internal'], 'the short list offers Admin, Client work and Internal');
   await project.selectOption('Client work');
-  await app.page.getByRole('button', { name: 'Start' }).click();
+  const start = app.page.getByRole('button', { name: 'Start' });
+  await start.waitFor();
+  assert.ok(await start.isVisible(), 'the page offers a start action');
+  await start.click();
   const entry = app.page.getByRole('listitem').filter({ hasText: 'Fix the login bug' });
   await entry.waitFor();
   assert.equal(await entry.getByRole('combobox', { name: 'Project for Fix the login bug' }).inputValue(), 'Client work', 'the entry carries the chosen project');
