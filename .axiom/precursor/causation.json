@@ -132,6 +132,15 @@
       ]
     },
     {
+      "requirementIdentity": "4f26ae62-8856-e1e0-68d7-ab70f66c9d1a",
+      "paths": [
+        {
+          "path": "e2e/persist.e2e.mjs",
+          "targetRevision": "5c93838963faf5974a8c2c49c0e60b030a03522b"
+        }
+      ]
+    },
+    {
       "requirementIdentity": "59d65845-34e6-f07c-5648-cdbd62415135",
       "paths": [
         {
@@ -249,6 +258,15 @@
       ]
     },
     {
+      "requirementIdentity": "bd0c0c09-93f8-7bdf-a95a-d1976058e380",
+      "paths": [
+        {
+          "path": "e2e/clients.e2e.mjs",
+          "targetRevision": "5c93838963faf5974a8c2c49c0e60b030a03522b"
+        }
+      ]
+    },
+    {
       "requirementIdentity": "c182ae03-b4f7-4674-3c55-d145b578c79c",
       "paths": [
         {
@@ -283,7 +301,7 @@
       "paths": [
         {
           "path": "e2e/time.e2e.mjs",
-          "targetRevision": "b723491b230f32206a7fda5f238bb7bdf18ef187"
+          "targetRevision": "5c93838963faf5974a8c2c49c0e60b030a03522b"
         }
       ]
     },
