@@ -58,7 +58,7 @@
       "paths": [
         {
           "path": "e2e/egg.e2e.mjs",
-          "targetRevision": "0116639427b71b1bef1e0ffe3e5f596b9a03a61f"
+          "targetRevision": "a44b416633fc3bbed5cb49beb9b23092f7b71f6f"
         }
       ]
     },
@@ -189,6 +189,15 @@
         {
           "path": "time.html",
           "targetRevision": "7cae561ed176956092265838d2ceabe853a0792d"
+        }
+      ]
+    },
+    {
+      "requirementIdentity": "9dc1a131-f527-0b35-68cf-85e379efaedc",
+      "paths": [
+        {
+          "path": "tests/clients.test.mjs",
+          "targetRevision": "a44b416633fc3bbed5cb49beb9b23092f7b71f6f"
         }
       ]
     },
