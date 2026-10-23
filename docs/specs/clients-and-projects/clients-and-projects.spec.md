@@ -1,6 +1,6 @@
 ---
 id: clients-and-projects
-status: draft
+status: approved
 dependsOn: [time-today]
 ---
 
