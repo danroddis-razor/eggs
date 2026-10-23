@@ -63,6 +63,15 @@
       ]
     },
     {
+      "requirementIdentity": "3e4ecba0-6d86-e74e-cf68-ac267c1fce79",
+      "paths": [
+        {
+          "path": "styles.css",
+          "targetRevision": "908164cb7bb28b8ccb789b79e85e02f1f1ed9242"
+        }
+      ]
+    },
+    {
       "requirementIdentity": "3ebc395b-26f0-5efb-1ebf-697769b437de",
       "paths": [
         {
@@ -193,6 +202,19 @@
       ]
     },
     {
+      "requirementIdentity": "79e692cc-df58-e28a-3b99-31f64e0a1835",
+      "paths": [
+        {
+          "path": "src/projects.mjs",
+          "targetRevision": "908164cb7bb28b8ccb789b79e85e02f1f1ed9242"
+        },
+        {
+          "path": "src/time.mjs",
+          "targetRevision": "908164cb7bb28b8ccb789b79e85e02f1f1ed9242"
+        }
+      ]
+    },
+    {
       "requirementIdentity": "8a77c0a8-bb91-90b5-7b9e-4bbd88fdaea4",
       "paths": [
         {
@@ -267,6 +289,19 @@
       ]
     },
     {
+      "requirementIdentity": "bf39a559-cba4-e5e7-bdf6-b156b89cc49c",
+      "paths": [
+        {
+          "path": "src/clients-page.mjs",
+          "targetRevision": "908164cb7bb28b8ccb789b79e85e02f1f1ed9242"
+        },
+        {
+          "path": "src/clients.mjs",
+          "targetRevision": "908164cb7bb28b8ccb789b79e85e02f1f1ed9242"
+        }
+      ]
+    },
+    {
       "requirementIdentity": "c182ae03-b4f7-4674-3c55-d145b578c79c",
       "paths": [
         {
@@ -302,6 +337,15 @@
         {
           "path": "e2e/time.e2e.mjs",
           "targetRevision": "5c93838963faf5974a8c2c49c0e60b030a03522b"
+        }
+      ]
+    },
+    {
+      "requirementIdentity": "e23827ce-26dc-cdaf-5c99-b67ad08c889d",
+      "paths": [
+        {
+          "path": "tests/clients-projects.test.mjs",
+          "targetRevision": "908164cb7bb28b8ccb789b79e85e02f1f1ed9242"
         }
       ]
     },
