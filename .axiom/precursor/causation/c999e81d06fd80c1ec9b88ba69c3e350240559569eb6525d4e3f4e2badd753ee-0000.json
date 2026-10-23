@@ -1,0 +1,17 @@
+{
+  "schema": "axiom.precursor.attempt-causation-delta",
+  "schemaVersion": 1,
+  "targetRevision": "eac8c06fd176b7b54d4bf6051a3f8b93b6a325d6",
+  "changes": [
+    {
+      "path": "e2e/persist.e2e.mjs",
+      "disposition": 0,
+      "requirementIdentity": "752b8208-d15d-5792-028e-70d4f0cdfdc8"
+    },
+    {
+      "path": "e2e/time.e2e.mjs",
+      "disposition": 0,
+      "requirementIdentity": "018f4215-35fc-42a5-5989-4bb145d6d9f8"
+    }
+  ]
+}
