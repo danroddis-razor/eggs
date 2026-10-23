@@ -2,7 +2,7 @@
 // with an hourly rate in pounds and a billable flag, and archives a project to hide
 // it from the picker. The client list shows each client's projects with their rate
 // and billable flag.
-import { makeClient, isValidClientName, clientsWithProjects } from './clients.mjs';
+import { makeClient, isValidClientName, hasClientName, clientsWithProjects } from './clients.mjs';
 import { makeProject, isValidProjectName, isValidRate, archiveProject, formatRate } from './projects.mjs';
 import { loadClients, saveClients, loadProjects, saveProjects } from './store.mjs';
 
@@ -104,15 +104,21 @@ function draw() {
   }
 }
 
-// Adding a client by name: the client list shows the added client name as plain text.
+// Adding a client by name: only when no client with that name already exists.
+// Adding a duplicate client is denied. The client list shows the added client
+// name as plain text.
 addClientButton.addEventListener('click', () => {
   const name = clientNameInput.value.trim();
   if (!isValidClientName(name)) {
     error.textContent = 'A client name is up to 100 characters.';
     return;
   }
-  error.textContent = '';
   const clients = loadClients();
+  if (hasClientName(clients, name)) {
+    error.textContent = `A client named ${name} already exists.`;
+    return;
+  }
+  error.textContent = '';
   clients.push(makeClient({ name }));
   if (!persist(clients, loadProjects())) return;
   clientNameInput.value = '';

@@ -36,13 +36,24 @@ function persist(entries) {
   }
 }
 
+// The project names an entry uses, so the picker keeps them while any entry does.
+function inUseProjects() {
+  const names = new Set();
+  for (const entry of loadEntries()) {
+    if (entry.project) names.add(entry.project);
+  }
+  return [...names];
+}
+
 // The project picker: the active projects grouped by client, in place of the fixed
 // short list. When no projects exist yet, the default Eggs client offers Admin,
-// Client work and Internal, with Admin first.
+// Client work and Internal, with Admin first. The default projects stay in the
+// picker while any entry uses them.
 function drawPicker() {
   const clients = loadClients();
   const projects = loadProjects();
-  const groups = pickerGroups(clients, projects);
+  const inUse = inUseProjects();
+  const groups = pickerGroups(clients, projects, inUse);
   projectSelect.replaceChildren();
   for (const group of groups) {
     const optgroup = document.createElement('optgroup');
@@ -55,7 +66,7 @@ function drawPicker() {
     }
     projectSelect.appendChild(optgroup);
   }
-  const first = firstPickerProject(clients, projects);
+  const first = firstPickerProject(clients, projects, inUse);
   if (first) projectSelect.value = first;
 }
 
@@ -64,7 +75,7 @@ function drawPicker() {
 function projectOptions(selected) {
   const clients = loadClients();
   const projects = loadProjects();
-  const groups = pickerGroups(clients, projects);
+  const groups = pickerGroups(clients, projects, inUseProjects());
   const options = [];
   for (const group of groups) {
     const optgroup = document.createElement('optgroup');
@@ -274,7 +285,7 @@ function syncTick() {
 startButton.addEventListener('click', () => {
   const work = workInput.value.trim();
   if (!work) return;
-  const project = projectSelect.value || firstPickerProject(loadClients(), loadProjects());
+  const project = projectSelect.value || firstPickerProject(loadClients(), loadProjects(), inUseProjects());
   const entry = makeEntry({ work, project, startedAt: new Date().toISOString() });
   const entries = loadEntries();
   entries.push(entry);
@@ -297,7 +308,7 @@ addButton.addEventListener('click', () => {
     return;
   }
   error.textContent = '';
-  const entry = makeEntry({ work, project: projectSelect.value || firstPickerProject(loadClients(), loadProjects()), startedAt: new Date().toISOString() });
+  const entry = makeEntry({ work, project: projectSelect.value || firstPickerProject(loadClients(), loadProjects(), inUseProjects()), startedAt: new Date().toISOString() });
   entry.running = false;
   entry.duration = seconds;
   const entries = loadEntries();

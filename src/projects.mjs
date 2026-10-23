@@ -51,28 +51,30 @@ export function projectsForClient(projects, clientId) {
 
 // The picker's groups: the active projects grouped by client, in the order the
 // clients were added. When no projects exist yet, the default Eggs client offers
-// Admin, Client work and Internal, with Admin first.
-export function pickerGroups(clients, projects) {
+// Admin, Client work and Internal, with Admin first. The default projects stay in
+// the picker while any entry uses them, so an entry keeps the project it was made
+// with.
+export function pickerGroups(clients, projects, inUse = []) {
   const active = activeProjects(projects);
-  if (active.length === 0) {
-    return [
-      {
-        client: DEFAULT_CLIENT,
-        projects: PROJECTS.map((name) => ({ id: name, name, clientId: DEFAULT_CLIENT.id, rate: 0, billable: false, archived: false })),
-      },
-    ];
+  const groups = [];
+  for (const client of clients ?? []) {
+    const clientProjects = active.filter((p) => p.clientId === client.id);
+    if (clientProjects.length > 0) groups.push({ client, projects: clientProjects });
   }
-  return (clients ?? [])
-    .map((client) => ({
-      client,
-      projects: active.filter((p) => p.clientId === client.id),
-    }))
-    .filter((group) => group.projects.length > 0);
+  // The default Eggs client offers Admin, Client work and Internal while no projects
+  // exist, and stays in the picker while any entry uses one of them.
+  if (active.length === 0 || PROJECTS.some((name) => inUse.includes(name))) {
+    groups.push({
+      client: DEFAULT_CLIENT,
+      projects: PROJECTS.map((name) => ({ id: name, name, clientId: DEFAULT_CLIENT.id, rate: 0, billable: false, archived: false })),
+    });
+  }
+  return groups;
 }
 
 // The first project a person can pick: the first listed project of the first group.
-export function firstPickerProject(clients, projects) {
-  const groups = pickerGroups(clients, projects);
+export function firstPickerProject(clients, projects, inUse = []) {
+  const groups = pickerGroups(clients, projects, inUse);
   const first = groups[0]?.projects[0];
   return first ? first.name : null;
 }

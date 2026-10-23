@@ -17,6 +17,11 @@ export function isValidClientName(name) {
   return value.length > 0 && value.length <= MAX_CLIENT_NAME;
 }
 
+// A client name is already taken when a client with that name exists.
+export function hasClientName(clients, name) {
+  return (clients ?? []).some((client) => client.name === name);
+}
+
 // Attach each client's projects to the client object.
 export function clientsWithProjects(clients, projects) {
   return (clients ?? []).map((client) => ({
