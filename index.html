@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Eggs</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>Eggs</h1>
+  </header>
+  <main>
+    <p class="egg" aria-hidden="true">🥚</p>
+    <fieldset class="doneness">
+      <legend>How do you like your egg?</legend>
+      <label><input type="radio" name="doneness" value="soft" checked> Soft</label>
+      <label><input type="radio" name="doneness" value="medium"> Medium</label>
+      <label><input type="radio" name="doneness" value="hard"> Hard</label>
+    </fieldset>
+    <button type="button" id="start">Start</button>
+    <p id="countdown" role="timer" aria-live="polite"></p>
+    <p id="ready" role="status" hidden>Your egg is ready.</p>
+  </main>
+  <script type="module" src="src/app.mjs"></script>
+</body>
+</html>
