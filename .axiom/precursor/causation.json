@@ -1,0 +1,49 @@
+{
+  "schema": "axiom.precursor.requirement-causation",
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "requirementIdentity": "225a62f1-f110-1273-50b8-32d25851a9bf",
+      "paths": [
+        {
+          "path": "src/timer.mjs",
+          "targetRevision": "c56a681e69beb808942cc47d15a62fbe18cada9a"
+        },
+        {
+          "path": "tests/timer.test.mjs",
+          "targetRevision": "c56a681e69beb808942cc47d15a62fbe18cada9a"
+        }
+      ]
+    },
+    {
+      "requirementIdentity": "6f68a945-355d-6c87-0a47-b193d486ab05",
+      "paths": [
+        {
+          "path": "index.html",
+          "targetRevision": "c56a681e69beb808942cc47d15a62fbe18cada9a"
+        },
+        {
+          "path": "src/app.mjs",
+          "targetRevision": "c56a681e69beb808942cc47d15a62fbe18cada9a"
+        },
+        {
+          "path": "styles.css",
+          "targetRevision": "c56a681e69beb808942cc47d15a62fbe18cada9a"
+        }
+      ]
+    },
+    {
+      "requirementIdentity": "c752f094-9d9b-e948-f300-ad6f174efd1e",
+      "paths": [
+        {
+          "path": "e2e/egg-timer.e2e.mjs",
+          "targetRevision": "c56a681e69beb808942cc47d15a62fbe18cada9a"
+        },
+        {
+          "path": "e2e/probe.e2e.mjs",
+          "targetRevision": "c56a681e69beb808942cc47d15a62fbe18cada9a"
+        }
+      ]
+    }
+  ]
+}
