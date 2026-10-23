@@ -2,9 +2,9 @@
 // typing what they are working on and starting the timer, stopping it, picking a project
 // for an entry, adding an entry by hand with a duration, editing an entry's work and
 // duration, and deleting an entry with an undo.
-import { PROJECTS } from './projects.mjs';
+import { pickerGroups, firstPickerProject, formatRate, billableAmount } from './projects.mjs';
 import { entriesForToday, entryDuration, totalDuration, formatDuration, formatElapsed, parseDuration, stopEntry, editEntry } from './entries.mjs';
-import { loadEntries, saveEntries, makeEntry } from './store.mjs';
+import { loadEntries, saveEntries, makeEntry, loadClients, loadProjects } from './store.mjs';
 
 const main = document.querySelector('main');
 const workInput = main.querySelector('#work');
@@ -18,6 +18,7 @@ const addButton = main.querySelector('#add');
 const error = main.querySelector('#error');
 const list = main.querySelector('#entry-list');
 const total = main.querySelector('#day-total');
+const billable = main.querySelector('#billable-amount');
 const status = main.querySelector('#status');
 
 // The entry a person just deleted, kept so an undo can bring it back.
@@ -35,22 +36,68 @@ function persist(entries) {
   }
 }
 
-// The project list, with Admin first.
-for (const project of PROJECTS) {
-  const option = document.createElement('option');
-  option.value = project;
-  option.textContent = project;
-  projectSelect.appendChild(option);
+// The project names an entry uses, so the picker keeps them while any entry does.
+function inUseProjects() {
+  const names = new Set();
+  for (const entry of loadEntries()) {
+    if (entry.project) names.add(entry.project);
+  }
+  return [...names];
 }
 
+// The project picker: the active projects grouped by client, in place of the fixed
+// short list. When no projects exist yet, the default Eggs client offers Admin,
+// Client work and Internal, with Admin first. The default projects stay in the
+// picker while any entry uses them.
+function drawPicker() {
+  const clients = loadClients();
+  const projects = loadProjects();
+  const inUse = inUseProjects();
+  const groups = pickerGroups(clients, projects, inUse);
+  projectSelect.replaceChildren();
+  for (const group of groups) {
+    const optgroup = document.createElement('optgroup');
+    optgroup.label = group.client.name;
+    for (const project of group.projects) {
+      const option = document.createElement('option');
+      option.value = project.name;
+      option.textContent = project.name;
+      optgroup.appendChild(option);
+    }
+    projectSelect.appendChild(optgroup);
+  }
+  const first = firstPickerProject(clients, projects, inUse);
+  if (first) projectSelect.value = first;
+}
+
+// The options a person can pick for an entry: the picker's groups, plus a fallback
+// option when the entry's project is not among them.
 function projectOptions(selected) {
-  return PROJECTS.map((project) => {
+  const clients = loadClients();
+  const projects = loadProjects();
+  const groups = pickerGroups(clients, projects, inUseProjects());
+  const options = [];
+  for (const group of groups) {
+    const optgroup = document.createElement('optgroup');
+    optgroup.label = group.client.name;
+    for (const project of group.projects) {
+      const option = document.createElement('option');
+      option.value = project.name;
+      option.textContent = project.name;
+      if (project.name === selected) option.selected = true;
+      optgroup.appendChild(option);
+    }
+    options.push(optgroup);
+  }
+  const known = groups.some((group) => group.projects.some((p) => p.name === selected));
+  if (selected && !known) {
     const option = document.createElement('option');
-    option.value = project;
-    option.textContent = project;
-    if (project === selected) option.selected = true;
-    return option;
-  });
+    option.value = selected;
+    option.textContent = selected;
+    option.selected = true;
+    options.push(option);
+  }
+  return options;
 }
 
 // The entry a person is editing, if any.
@@ -58,6 +105,7 @@ let editingId = null;
 
 function draw() {
   const entries = loadEntries();
+  const projects = loadProjects();
   const todays = entriesForToday(entries);
   list.replaceChildren();
   if (todays.length === 0) {
@@ -131,6 +179,7 @@ function draw() {
     }
   }
   total.textContent = formatDuration(totalDuration(entries));
+  billable.textContent = formatRate(billableAmount(entries, projects));
 }
 
 // The inline form a person edits an entry's work and duration with.
@@ -236,7 +285,7 @@ function syncTick() {
 startButton.addEventListener('click', () => {
   const work = workInput.value.trim();
   if (!work) return;
-  const project = projectSelect.value || PROJECTS[0];
+  const project = projectSelect.value || firstPickerProject(loadClients(), loadProjects(), inUseProjects());
   const entry = makeEntry({ work, project, startedAt: new Date().toISOString() });
   const entries = loadEntries();
   entries.push(entry);
@@ -259,7 +308,7 @@ addButton.addEventListener('click', () => {
     return;
   }
   error.textContent = '';
-  const entry = makeEntry({ work, project: projectSelect.value || PROJECTS[0], startedAt: new Date().toISOString() });
+  const entry = makeEntry({ work, project: projectSelect.value || firstPickerProject(loadClients(), loadProjects(), inUseProjects()), startedAt: new Date().toISOString() });
   entry.running = false;
   entry.duration = seconds;
   const entries = loadEntries();
@@ -271,5 +320,6 @@ addButton.addEventListener('click', () => {
   syncTick();
 });
 
+drawPicker();
 draw();
 syncTick();

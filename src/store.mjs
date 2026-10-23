@@ -25,3 +25,35 @@ export function makeEntry({ work, project, startedAt }) {
     running: true,
   };
 }
+
+// Projects and clients, one key per record kind.
+const PROJECTS_KEY = 'eggs.projects';
+const CLIENTS_KEY = 'eggs.clients';
+
+export function loadProjects() {
+  try {
+    const raw = localStorage.getItem(PROJECTS_KEY);
+    const parsed = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+export function saveProjects(projects) {
+  localStorage.setItem(PROJECTS_KEY, JSON.stringify(projects ?? []));
+}
+
+export function loadClients() {
+  try {
+    const raw = localStorage.getItem(CLIENTS_KEY);
+    const parsed = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+export function saveClients(clients) {
+  localStorage.setItem(CLIENTS_KEY, JSON.stringify(clients ?? []));
+}

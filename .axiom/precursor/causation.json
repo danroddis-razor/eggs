@@ -3,6 +3,15 @@
   "schemaVersion": 1,
   "entries": [
     {
+      "requirementIdentity": "018f4215-35fc-42a5-5989-4bb145d6d9f8",
+      "paths": [
+        {
+          "path": "e2e/time.e2e.mjs",
+          "targetRevision": "eac8c06fd176b7b54d4bf6051a3f8b93b6a325d6"
+        }
+      ]
+    },
+    {
       "requirementIdentity": "064fda01-6321-8746-02d1-0d08a773fbbc",
       "paths": [
         {
@@ -45,6 +54,46 @@
       ]
     },
     {
+      "requirementIdentity": "2d2baaae-0eb8-c989-cd01-1b2e3f757925",
+      "paths": [
+        {
+          "path": "e2e/egg.e2e.mjs",
+          "targetRevision": "a44b416633fc3bbed5cb49beb9b23092f7b71f6f"
+        }
+      ]
+    },
+    {
+      "requirementIdentity": "3e4ecba0-6d86-e74e-cf68-ac267c1fce79",
+      "paths": [
+        {
+          "path": "styles.css",
+          "targetRevision": "908164cb7bb28b8ccb789b79e85e02f1f1ed9242"
+        }
+      ]
+    },
+    {
+      "requirementIdentity": "3ebc395b-26f0-5efb-1ebf-697769b437de",
+      "paths": [
+        {
+          "path": "clients.html",
+          "targetRevision": "7cae561ed176956092265838d2ceabe853a0792d"
+        },
+        {
+          "path": "src/clients-page.mjs",
+          "targetRevision": "7cae561ed176956092265838d2ceabe853a0792d"
+        }
+      ]
+    },
+    {
+      "requirementIdentity": "43539a78-37c1-4b7e-8320-0b9bbaf2f6ec",
+      "paths": [
+        {
+          "path": "tests/projects.test.mjs",
+          "targetRevision": "7cae561ed176956092265838d2ceabe853a0792d"
+        }
+      ]
+    },
+    {
       "requirementIdentity": "4681e632-3ece-ead2-f3a6-69cfcb3b5848",
       "paths": [
         {
@@ -67,6 +116,36 @@
         {
           "path": "src/time.mjs",
           "targetRevision": "a4f5734eac0207c9909c5001e9a5eac2815dde49"
+        }
+      ]
+    },
+    {
+      "requirementIdentity": "496ce038-8b9b-3fa7-8c85-597ae8a1b90a",
+      "paths": [
+        {
+          "path": "src/clients.mjs",
+          "targetRevision": "0116639427b71b1bef1e0ffe3e5f596b9a03a61f"
+        },
+        {
+          "path": "src/projects.mjs",
+          "targetRevision": "0116639427b71b1bef1e0ffe3e5f596b9a03a61f"
+        },
+        {
+          "path": "src/store.mjs",
+          "targetRevision": "0116639427b71b1bef1e0ffe3e5f596b9a03a61f"
+        },
+        {
+          "path": "tests/projects.test.mjs",
+          "targetRevision": "0116639427b71b1bef1e0ffe3e5f596b9a03a61f"
+        }
+      ]
+    },
+    {
+      "requirementIdentity": "4f26ae62-8856-e1e0-68d7-ab70f66c9d1a",
+      "paths": [
+        {
+          "path": "e2e/persist.e2e.mjs",
+          "targetRevision": "5c93838963faf5974a8c2c49c0e60b030a03522b"
         }
       ]
     },
@@ -105,11 +184,77 @@
       ]
     },
     {
+      "requirementIdentity": "73b4a8b7-8094-bfac-f03a-dde1a9a7e7ea",
+      "paths": [
+        {
+          "path": "src/time.mjs",
+          "targetRevision": "7cae561ed176956092265838d2ceabe853a0792d"
+        }
+      ]
+    },
+    {
+      "requirementIdentity": "752b8208-d15d-5792-028e-70d4f0cdfdc8",
+      "paths": [
+        {
+          "path": "e2e/persist.e2e.mjs",
+          "targetRevision": "eac8c06fd176b7b54d4bf6051a3f8b93b6a325d6"
+        }
+      ]
+    },
+    {
+      "requirementIdentity": "79e692cc-df58-e28a-3b99-31f64e0a1835",
+      "paths": [
+        {
+          "path": "src/projects.mjs",
+          "targetRevision": "908164cb7bb28b8ccb789b79e85e02f1f1ed9242"
+        },
+        {
+          "path": "src/time.mjs",
+          "targetRevision": "908164cb7bb28b8ccb789b79e85e02f1f1ed9242"
+        }
+      ]
+    },
+    {
+      "requirementIdentity": "8a77c0a8-bb91-90b5-7b9e-4bbd88fdaea4",
+      "paths": [
+        {
+          "path": "time.html",
+          "targetRevision": "7cae561ed176956092265838d2ceabe853a0792d"
+        }
+      ]
+    },
+    {
+      "requirementIdentity": "9dc1a131-f527-0b35-68cf-85e379efaedc",
+      "paths": [
+        {
+          "path": "tests/clients.test.mjs",
+          "targetRevision": "a44b416633fc3bbed5cb49beb9b23092f7b71f6f"
+        }
+      ]
+    },
+    {
       "requirementIdentity": "a6d8cd59-451b-01b7-3116-8b12a057ae0b",
       "paths": [
         {
           "path": "e2e/persist.e2e.mjs",
           "targetRevision": "a4f5734eac0207c9909c5001e9a5eac2815dde49"
+        }
+      ]
+    },
+    {
+      "requirementIdentity": "ab50b0c4-33b2-e056-8578-e861089352fe",
+      "paths": [
+        {
+          "path": "e2e/clients.e2e.mjs",
+          "targetRevision": "7cae561ed176956092265838d2ceabe853a0792d"
+        },
+        {
+          "path": "src/clients.mjs",
+          "targetRevision": "7cae561ed176956092265838d2ceabe853a0792d"
+        },
+        {
+          "path": "src/projects.mjs",
+          "targetRevision": "7cae561ed176956092265838d2ceabe853a0792d"
         }
       ]
     },
@@ -131,6 +276,28 @@
         {
           "path": "styles.css",
           "targetRevision": "15aa2e988a69452aa2a1dd8177e50c2b087c0614"
+        }
+      ]
+    },
+    {
+      "requirementIdentity": "bd0c0c09-93f8-7bdf-a95a-d1976058e380",
+      "paths": [
+        {
+          "path": "e2e/clients.e2e.mjs",
+          "targetRevision": "5c93838963faf5974a8c2c49c0e60b030a03522b"
+        }
+      ]
+    },
+    {
+      "requirementIdentity": "bf39a559-cba4-e5e7-bdf6-b156b89cc49c",
+      "paths": [
+        {
+          "path": "src/clients-page.mjs",
+          "targetRevision": "908164cb7bb28b8ccb789b79e85e02f1f1ed9242"
+        },
+        {
+          "path": "src/clients.mjs",
+          "targetRevision": "908164cb7bb28b8ccb789b79e85e02f1f1ed9242"
         }
       ]
     },
@@ -165,11 +332,38 @@
       ]
     },
     {
+      "requirementIdentity": "db4b1374-27dd-d35d-5d26-ac943138a194",
+      "paths": [
+        {
+          "path": "e2e/time.e2e.mjs",
+          "targetRevision": "5c93838963faf5974a8c2c49c0e60b030a03522b"
+        }
+      ]
+    },
+    {
+      "requirementIdentity": "e23827ce-26dc-cdaf-5c99-b67ad08c889d",
+      "paths": [
+        {
+          "path": "tests/clients-projects.test.mjs",
+          "targetRevision": "908164cb7bb28b8ccb789b79e85e02f1f1ed9242"
+        }
+      ]
+    },
+    {
       "requirementIdentity": "ebaa74a8-7fb5-5ee5-ebb6-6f59f751217a",
       "paths": [
         {
           "path": "time.html",
           "targetRevision": "a4f5734eac0207c9909c5001e9a5eac2815dde49"
+        }
+      ]
+    },
+    {
+      "requirementIdentity": "fbcc93a8-1835-0e56-9b8f-d746fac8846e",
+      "paths": [
+        {
+          "path": "e2e/time.e2e.mjs",
+          "targetRevision": "2ee57777bf99fb3f49ca0b4049251e64cfc2dafd"
         }
       ]
     }
