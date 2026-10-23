@@ -295,6 +295,15 @@
           "targetRevision": "a4f5734eac0207c9909c5001e9a5eac2815dde49"
         }
       ]
+    },
+    {
+      "requirementIdentity": "fbcc93a8-1835-0e56-9b8f-d746fac8846e",
+      "paths": [
+        {
+          "path": "e2e/time.e2e.mjs",
+          "targetRevision": "2ee57777bf99fb3f49ca0b4049251e64cfc2dafd"
+        }
+      ]
     }
   ]
 }
